@@ -16,27 +16,25 @@
  * limitations under the License.
  */
 
--streaming;
+package soda.streaming;
 
-import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.api.java.ExecutionEnvironment;
 
 /**
- * Skeleton for a Flink Streaming Job.
+ * Skeleton for a Flink Batch Job.
  *
- * <p>For a tutorial how to write a Flink streaming application, check the
+ * <p>For a tutorial how to write a Flink batch application, check the
  * tutorials and examples on the <a href="https://flink.apache.org/docs/stable/">Flink Website</a>.
  *
- * <p>To package your application into a JAR file for execution, run
- * 'mvn clean package' on the command line.
- *
- * <p>If you change the name of the main class (with the public static void main(String[] args))
- * method, change the respective entry in the POM.xml file (simply search for 'mainClass').
+ * <p>To package your application into a JAR file for execution,
+ * change the main class in the POM.xml file to this class (simply search for 'mainClass')
+ * and run 'mvn clean package' on the command line.
  */
-public class StreamingJob {
+public class BatchJob {
 
 	public static void main(String[] args) throws Exception {
-		// set up the streaming execution environment
-		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+		// set up the batch execution environment
+		final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
 		/*
 		 * Here, you can start creating your execution plan for Flink.
@@ -44,7 +42,7 @@ public class StreamingJob {
 		 * Start with getting some data from the environment, like
 		 * 	env.readTextFile(textPath);
 		 *
-		 * then, transform the resulting DataStream<String> using operations
+		 * then, transform the resulting DataSet<String> using operations
 		 * like
 		 * 	.filter()
 		 * 	.flatMap()
@@ -54,11 +52,15 @@ public class StreamingJob {
 		 * and many more.
 		 * Have a look at the programming guide for the Java API:
 		 *
-		 * https://flink.apache.org/docs/latest/apis/streaming/index.html
+		 * https://flink.apache.org/docs/latest/apis/batch/index.html
+		 *
+		 * and the examples
+		 *
+		 * https://flink.apache.org/docs/latest/apis/batch/examples.html
 		 *
 		 */
 
 		// execute program
-		env.execute("Flink Streaming Java API Skeleton");
+		env.execute("Flink Batch Java API Skeleton");
 	}
 }
