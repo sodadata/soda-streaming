@@ -1,4 +1,4 @@
-# soda-streaming-poc-tooling
+# poc-tooling
 
 Repository containing the tooling for showcasing the end-to-end POC demo
 
@@ -9,10 +9,6 @@ This will start:
 - kafka zookeeper
 - kafka broker
 - kafka connect service
-- schema registry
-- confluent control center
-
-- a temporary kafka container for topic creation and configuration
 
 
 #### Data-generators
@@ -24,8 +20,11 @@ There are multiple data generators setup in the project, to publish auto generat
 The config needs to be added in 4 places:
 - a .avro schema declaring how to generate the data in kafka-connect-datagen/config
 - a config file in kafka-setup declaring the configuration settings for the datagenerator
-- a line in the entrypoint script in kafka-setup/bin to make a new topic
-- a line in the entrypoint script in kafka-setup/bin to submit the datagen config.
+
+you can start a datagenerator with:
+```
+curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://localhost:8083/connectors/ -d @kafka-connect-datagen/config/stream1.json
+```
 
 ### Versions:
 

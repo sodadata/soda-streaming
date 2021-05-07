@@ -28,7 +28,6 @@ import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTime
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import soda.streaming.metrics.MessageCount;
-
 import java.util.Properties;
 
 /**
@@ -49,9 +48,10 @@ public class StreamingJob {
 		// set up the streaming execution environment
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
+		final String broker = (args.length > 0) ? args[0] : "broker:29092" ;
 
 		Properties properties = new Properties();
-		properties.setProperty("bootstrap.servers", "localhost:9092");
+		properties.setProperty("bootstrap.servers", broker);
 		properties.setProperty("group.id", "data-monitor");
 		FlinkKafkaConsumer<String> stream1Consumer = new FlinkKafkaConsumer<>("stream1", new SimpleStringSchema(), properties);
 		stream1Consumer.setStartFromLatest();
