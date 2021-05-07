@@ -1,0 +1,3 @@
+[submodule "poc-tooling/kafka-connect-datagen/build"]
+	path = poc-tooling/kafka-connect-datagen/build
+	url = git@github.com:confluentinc/kafka-connect-datagen.git
