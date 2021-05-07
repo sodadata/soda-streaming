@@ -1,0 +1,24 @@
+{
+  "name": "stream1",
+  "type": "record",
+  "fields": [
+    {
+      "name": "key",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "regex": "key-[0-9]{1}"
+        }
+      }
+    },
+    {
+      "name": "value",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "regex": "[0-9]{3}"
+        }
+      }
+    }
+  ]
+}

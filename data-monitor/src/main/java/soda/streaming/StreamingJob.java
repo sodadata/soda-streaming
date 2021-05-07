@@ -18,7 +18,18 @@
 
 package soda.streaming;
 
+import org.apache.flink.api.common.functions.AggregateFunction;
+import org.apache.flink.api.common.functions.ReduceFunction;
+import org.apache.flink.api.common.serialization.SimpleStringSchema;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.jsonschema.JsonSchema;
+import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
+import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+import soda.streaming.metrics.MessageCount;
+
+import java.util.Properties;
 
 /**
  * Skeleton for a Flink Streaming Job.
@@ -38,27 +49,20 @@ public class StreamingJob {
 		// set up the streaming execution environment
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-		/*
-		 * Here, you can start creating your execution plan for Flink.
-		 *
-		 * Start with getting some data from the environment, like
-		 * 	env.readTextFile(textPath);
-		 *
-		 * then, transform the resulting DataStream<String> using operations
-		 * like
-		 * 	.filter()
-		 * 	.flatMap()
-		 * 	.join()
-		 * 	.coGroup()
-		 *
-		 * and many more.
-		 * Have a look at the programming guide for the Java API:
-		 *
-		 * https://flink.apache.org/docs/latest/apis/streaming/index.html
-		 *
-		 */
+
+		Properties properties = new Properties();
+		properties.setProperty("bootstrap.servers", "localhost:9092");
+		properties.setProperty("group.id", "data-monitor");
+		FlinkKafkaConsumer<String> stream1Consumer = new FlinkKafkaConsumer<>("stream1", new SimpleStringSchema(), properties);
+		stream1Consumer.setStartFromLatest();
+		DataStream<String> stream = env.addSource(stream1Consumer);
+
+		DataStream<Integer> output = stream
+				.windowAll(TumblingProcessingTimeWindows.of(Time.seconds(5)))
+				.aggregate(new MessageCount());
+		output.print();
 
 		// execute program
-		env.execute("Flink Streaming Java API Skeleton");
+		env.execute("data-monitor");
 	}
 }

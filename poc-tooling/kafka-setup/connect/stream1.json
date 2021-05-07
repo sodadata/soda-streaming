@@ -1,0 +1,13 @@
+{
+  "name": "datagen-stream1",
+  "config": {
+    "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
+    "kafka.topic": "stream1",
+    "schema.filename": "/tmp/config/stream1.avro",
+    "schema.keyfield": "key",
+    "value.converter.schemas.enable": "false",
+    "producer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor",
+    "max.interval": 100,
+    "tasks.max": "1"
+  }
+}
