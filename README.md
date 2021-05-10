@@ -8,7 +8,9 @@ repository contains:
 ### Phase 1
 
 ### Setup
-Start a docker-compose environment with:
+Start the docker-compose environment.
+
+This contains:
 - kafka zookeeper 
 - kafka broker 
 - kafka-connect 
@@ -16,9 +18,6 @@ Start a docker-compose environment with:
 
 ```
 cd poc-tooling
-```
-Start the cluster:
-```
 docker-compose up -d
 ```
 Wait until connect is `Up (healthy)`
