@@ -31,7 +31,7 @@ services:
         state.change.logger=INFO
 
  
-  connect-datagen:
+  connect:
     image: confluentinc/kafka-connect-datagen:0.4.0-6.1.1
     build:
       context: kafka-connect-datagen/build
