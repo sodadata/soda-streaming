@@ -3,6 +3,16 @@ repository contains:
 - [data-monitor](/data-monitor/README.md)
 - [poc-tooling](/poc-tooling/README.md)
 
+The poc tooling contains a git submodule of https://github.com:confluentinc/kafka-connect-datagen.git.
+
+After cloning the repository run:
+```
+git submodule init
+git submodule update
+```
+to retrieve the source code of this submodule (which is necessary for the docker-compose to build)
+
+
 ## Proof of Concept
 
 ### Phase 1
