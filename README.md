@@ -39,6 +39,8 @@ docker-compose exec broker opt/kafka/bin/kafka-console-consumer.sh --topic strea
 This should show messages as `Struct{key=key-xx, value=xxx}` if the data generator is running correctly.
 
 Build the flink job:
+
+(This requires Java 11 or higher)
 ```
 cd ../data-monitor
 mvn clean package

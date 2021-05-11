@@ -18,3 +18,4 @@ To build the Jar:
 
 ### versions
 - Flink `v1.13.0`
+- Java `11`
