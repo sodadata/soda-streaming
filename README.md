@@ -34,7 +34,7 @@ You should get a HTTP-201 Created response.
 
 Check the data on kafka:
 ```
-docker-compose exec broker opt/kafka/bin/kafka-console.consumer.sh --topic stream1 --bootstrap-server localhost:9092
+docker-compose exec broker opt/kafka/bin/kafka-console-consumer.sh --topic stream1 --bootstrap-server localhost:9092
 ```
 This should show messages as `Struct{key=key-xx, value=xxx}` if the data generator is running correctly.
 
