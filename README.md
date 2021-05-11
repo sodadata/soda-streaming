@@ -53,3 +53,8 @@ cd ../poc-tooling
 ./submit-job.sh
 ```
 You can also check the [Flink UI](http://localhost:8081)
+
+To shut everything back down and clean up:
+```
+docker-compose down
+```
