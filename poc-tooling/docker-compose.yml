@@ -34,8 +34,8 @@ services:
   connect:
     image: confluentinc/kafka-connect-datagen:0.4.0-6.1.1
     build:
-      context: kafka-connect-datagen/build
-      dockerfile: Dockerfile-confluenthub
+      context: kafka-connect-datagen
+      dockerfile: Dockerfile
       args:
         - KAFKA_CONNECT_DATAGEN_VERSION=0.4.0
         - CP_VERSION=6.1.1

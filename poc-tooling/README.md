@@ -14,9 +14,6 @@ This will start:
 #### Data-generators
 
 The datagenerators are based on https://github.com/confluentinc/kafka-connect-datagen.
-The datagen repo is contained in this repo as a submodule in `/kafka-connect-datagen/build`.
-
-Run `git submodlue init` and `git submodule update` to retrieve the source code.
 
 There are multiple data generators setup in the project, to publish auto generated messages on kafka.
 The config needs to be added in 4 places:
