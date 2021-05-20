@@ -1,6 +1,9 @@
+**!! This repository is in an early alpha stage. !!**
+
 # Soda-streaming
-repository contains:
-- [data-monitor](/data-monitor/README.md)
+
+The repository contains:
+- [streaming-monitor](/streaming-monitor/README.md)
 - [poc-tooling](/poc-tooling/README.md)
 
 ## Proof of Concept
@@ -42,7 +45,7 @@ Build the flink job:
 
 (This requires Java 11 or higher)
 ```
-cd ../data-monitor
+cd ../streaming-monitor
 mvn clean package
 ```
 
