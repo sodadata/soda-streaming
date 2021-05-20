@@ -12,5 +12,5 @@ def show_content_avro_file(file_result_path:str):
     with DataFileReader(open(file_result_path, "rb"), DatumReader()) as avro_file:
         records_seen = 0
         for record in avro_file:
-            print("%d - %record" % (records_seen, record))
+            print("%d - %s" % (records_seen, record))
             records_seen += 1
