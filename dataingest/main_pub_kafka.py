@@ -1,8 +1,10 @@
 from confluent_kafka import Producer
 import time
+import os
 
-
-p = Producer({'bootstrap.servers': 'localhost:9092'})
+bootstrap_server = os.getenv("BOOTSTRAP_SERVER", 'localhost:9092')
+print("set bootstrap_server to %s" %bootstrap_server)
+p = Producer({'bootstrap.servers': bootstrap_server})
 
 def delivery_report(err, msg):
     """ Called once for each message produced to indicate delivery result.

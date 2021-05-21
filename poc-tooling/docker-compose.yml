@@ -94,6 +94,17 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 2
+
+  avrokafkapublisher:
+    build:
+      context: ../dataingest
+      dockerfile: Dockerfile
+    environment:
+      - BOOTSTRAP_SERVER=broker:9092
+    depends_on:
+      - zookeeper
+      - broker
+
       
 #  schema-registry:
 #    image: confluentinc/cp-schema-registry:6.1.1
