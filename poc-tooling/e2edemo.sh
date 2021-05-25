@@ -37,7 +37,7 @@ do
 		f)
 			echo "Requested demo to execute with flag: $OPTARG"
 			MYOPTF=$OPTARG
-			if [ $MYOPTF == "avro" ]
+			if [ $MYOPTF == "avro-data" ]
 			then
 			  echo "E2E demo with avro data"
 			  bring_up_whole_infrastructure_with_specific_profile "avro-data"
