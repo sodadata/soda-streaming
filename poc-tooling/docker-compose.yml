@@ -1,5 +1,5 @@
 ---
-version: '2.2'
+version: '3.3'
 services:
   zookeeper:
     image: wurstmeister/zookeeper
@@ -41,6 +41,7 @@ services:
         - CP_VERSION=6.1.1
     hostname: connect
     container_name: connect
+    profiles: ["flat-data"]
     depends_on:
       - zookeeper
       - broker
@@ -88,19 +89,21 @@ services:
     depends_on:
       - jobmanager
     command: taskmanager
-    scale: 1
+    deploy:
+      replicas: 1
     environment:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 2
 
-  avrokafkapublisher:
+  avrotokafkadatagenerator:
     build:
       context: ../dataingest
       dockerfile: Dockerfile
+    profiles: ["avro-data"]
     environment:
-      - BOOTSTRAP_SERVER=broker:9092
+      - BOOTSTRAP_SERVER=broker:29092
     depends_on:
       - zookeeper
       - broker
