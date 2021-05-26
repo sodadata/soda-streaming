@@ -4,7 +4,7 @@ from utils.generator import generate_random_record
 """
 FILL OUT THESE VARIABLES:
 """
-number_of_records_to_randomly_create = 10
+number_of_records_to_randomly_create = 1000
 show_content_stdout = True
 
 if __name__ == "__main__":

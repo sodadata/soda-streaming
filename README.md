@@ -8,6 +8,18 @@ repository contains:
 ### Phase 1
 
 ### Setup
+0. You can choose for this setup to run end-to-end (E2E) automatically running the `e2edemo.sh`.  
+Two setups can be chosen based on the type of data one wants. Use the flag `-f` to specify the type of data you want
+to use.
+The flag options are: `avro-data` OR `flat-data`.  
+Example Usage:
+```
+e2edemo.sh -f avro-data
+```
+Note, you need at least docker-compose v1.29 (to install latest version see [here](https://docs.docker.com/compose/install/))
+
+If you want to go through the steps one by one, follow the steps below:
+
 1. Start the docker-compose environment.
 
     This contains:
@@ -33,18 +45,23 @@ repository contains:
     check [localhost:8083](http://localhost:8083) for details on the kafka-connect component.
     Details on *version*, *commit* and *kafka_cluster_id* should be visible.  
 
-3. Start the datagenerator: 
- 
-    Datagenerator is based on this [confluence-project](https://github.com/confluentinc/kafka-connect-datagen). The core
-    principle of the data generation is based on this [avro-random-generator](https://github.com/confluentinc/avro-random-generator)
-    This boils down to kafka-connect with some pre-installed libraries such that a kafka-connect connector is available for
-    configuration. This connector generates mock data and pushes this to Kafka.
-    Setup this connector by:  
-    ```
-    curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://localhost:8083/connectors/ -d @kafka-connect-datagen/config/stream1.json
-    ```
-    You should get a HTTP-201 Created response. Using the REST API endpoint at localhost:8083/connectors one can see the
-    connector is added.  
+3. Start a datagenerator: 
+
+    Two types of data are developed: one through 'kafka-connect' and one through a custom made component 'avrotokafkadatagenerator'
+    1. KAFKA-CONNECT: The datagenerators are based on https://github.com/confluentinc/kafka-connect-datagen.
+
+        Datagenerator is based on this [confluence-project](https://github.com/confluentinc/kafka-connect-datagen). The core
+        principle of the data generation is based on this [avro-random-generator](https://github.com/confluentinc/avro-random-generator)
+        This boils down to kafka-connect with some pre-installed libraries such that a kafka-connect connector is available for
+        configuration. This connector generates mock data and pushes this to Kafka.
+        Setup this connector by:  
+        ```
+        curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://localhost:8083/connectors/ -d @kafka-connect-datagen/config/stream1.json
+        ```
+        You should get a HTTP-201 Created response. Using the REST API endpoint at localhost:8083/connectors one can see the
+        connector is added.  
+        
+    2. Custom made component 'avrotokafkadatagenerator', if chosen this option, the datagenerator will start automatically.
 
 4. Check the data on kafka:
 
