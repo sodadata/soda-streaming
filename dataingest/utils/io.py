@@ -1,6 +1,7 @@
 import avro.schema
 from avro.datafile import DataFileReader, DataFileWriter
 from avro.io import DatumReader, DatumWriter
+import io
 
 def read_schema(path: str):
     return avro.schema.parse(open(path).read())
@@ -14,3 +15,11 @@ def show_content_avro_file(file_result_path:str):
         for record in avro_file:
             print("%d - %s" % (records_seen, record))
             records_seen += 1
+
+def get_kafka_ready_avro_record(schema, random_record):
+    writer = avro.io.DatumWriter(schema)
+    bytes_writer = io.BytesIO()
+    encoder = avro.io.BinaryEncoder(bytes_writer)
+    writer.write(random_record, encoder)
+    raw_bytes = bytes_writer.getvalue()
+    return raw_bytes

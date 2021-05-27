@@ -1,0 +1,17 @@
+{"type": "record",
+"namespace": "klarrio.hellofresh",
+ "name": "BoxChoiceDescription",
+ "doc": "Description of specific choice of hello fresh box",
+ "fields": [
+     {"name": "NumberOfPeople", "type": "int"},
+     {"name": "NumberOfMeals",  "type": "int"},
+     {"name": "", "type": "int"},
+     {"name": "destinationRegionId",  "type": ["string", "null"]},
+     {"name": "destinationRegionName", "type": "string"},
+     {"name": "BoxPrice",  "type": ["float","null"]},
+     {"name": "MenuPreferenceTypes", "type":
+        {   "name":"MenuPreferenceTypes",
+            "type": "enum",
+            "symbols" : ["Meat", "Fish", "Vegan", "QuickMeal", "Family", "Vegetarian"]}}
+ ]
+}
