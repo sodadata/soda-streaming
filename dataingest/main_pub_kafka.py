@@ -1,41 +1,40 @@
-from confluent_kafka import Producer
+
 import time
 import os
-from utils.generator import generate_random_record
-from utils.io import get_kafka_ready_avro_record
-from utils.io import read_schema
+from utils.io import CustomAvroKafkaPublisher
 
-bootstrap_server = os.getenv("BOOTSTRAP_SERVER", 'localhost:9092')
-print("set bootstrap_server to %s" %bootstrap_server)
-p = Producer({'bootstrap.servers': bootstrap_server})
+import logging
 
-
-def delivery_report(err, msg):
-    """ Called once for each message produced to indicate delivery result.
-        Triggered by poll() or flush(). """
-    if err is not None:
-        print('Message delivery failed: {}'.format(err))
-    else:
-        print('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
+# Set proper logging
+logging.basicConfig(format="%(asctime)s | %(threadName)s | %(message)s",
+                    level=logging.DEBUG,
+                    datefmt="%H:%M:%S")
 
 
-def get_avro_data_from_file(path:str):
-    #from fastavro import reader
-    #avro_records = []
-    with open(path, 'rb') as fo:
-        b = fo.readlines()
-        print(type(b))
-    return b
+if __name__ == "__main__":
+    expedia_kafka_config = {
+        "bootstrap_server": os.getenv("BOOTSTRAP_SERVER", 'localhost:9092'),
+        "topic_name": "stream1",
+        "topic_description": "expedia"
+    }
+    expedia_data_generation_rate_msg_sec = int(os.getenv("EXPEDIA_RATE_MSG_SEC", 10))
+    expedia_publisher = CustomAvroKafkaPublisher(kafka_config=expedia_kafka_config,
+                                                 data_generation_rate_msg_sec=expedia_data_generation_rate_msg_sec)
 
-schema = read_schema("./schemas/expedia.avsc")
+    hellofresh_kafka_config = {
+        "bootstrap_server": os.getenv("BOOTSTRAP_SERVER", 'localhost:9092'),
+        "topic_name": "stream2",
+        "topic_description": "hellofresh"
+    }
+    hellofresh_data_generation_rate_msg_sec = int(os.getenv("HELLOFRESH_RATE_MSG_SEC", 5))
+    hellofresh_publisher = CustomAvroKafkaPublisher(kafka_config=hellofresh_kafka_config,
+                                                    data_generation_rate_msg_sec=hellofresh_data_generation_rate_msg_sec)
 
-throughput = 100
-while True:
-    for i in range(100):
-        time.sleep(1/throughput)
-        random_data = generate_random_record()
-        avro_serialized_data = get_kafka_ready_avro_record(schema, random_data)
-        p.produce("stream1", avro_serialized_data, callback=delivery_report)
-        print("produced new message")
-    p.flush()
+
+    publishers = [expedia_publisher, hellofresh_publisher]
+    for publisher in publishers:
+        publisher.start()
+        #publisher.join()
+
+
 

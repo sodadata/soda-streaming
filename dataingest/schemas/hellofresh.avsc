@@ -3,14 +3,12 @@
  "name": "BoxChoiceDescription",
  "doc": "Description of specific choice of hello fresh box",
  "fields": [
-     {"name": "NumberOfPeople", "type": "int"},
-     {"name": "NumberOfMeals",  "type": "int"},
-     {"name": "", "type": "int"},
-     {"name": "destinationRegionId",  "type": ["string", "null"]},
-     {"name": "destinationRegionName", "type": "string"},
-     {"name": "BoxPrice",  "type": ["float","null"]},
-     {"name": "MenuPreferenceTypes", "type":
-        {   "name":"MenuPreferenceTypes",
+     {"name": "numberOfPeople", "type": "int"},
+     {"name": "numberOfMeals",  "type": "int"},
+     {"name": "foodAllergiesDescription",  "type": ["string", "null"]},
+     {"name": "boxPrice",  "type": ["float","null"]},
+     {"name": "menuPreferenceTypes", "type":
+        {   "name":"menuPreferenceTypes",
             "type": "enum",
             "symbols" : ["Meat", "Fish", "Vegan", "QuickMeal", "Family", "Vegetarian"]}}
  ]
