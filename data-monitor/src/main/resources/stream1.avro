@@ -44,18 +44,7 @@
     },
     {
       "name": "col5",
-      "type": [
-        {
-          "type": "int",
-          "arg.properties": {
-            "range": {
-              "min": -100,
-              "max": 100
-            }
-          }
-        },
-        "null"
-      ]
+      "type": ["int","null"]
     },
     {
       "name": "col6",

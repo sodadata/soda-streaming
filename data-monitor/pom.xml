@@ -53,7 +53,6 @@ under the License.
 
 	<dependencies>
 		<!-- Apache Flink dependencies -->
-		<!-- These dependencies should be reverted to provided once we have a local cluster, because they should not be packaged into the JAR file. -->
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-java</artifactId>
@@ -80,6 +79,20 @@ under the License.
 			<version>${flink.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-avro</artifactId>
+			<version>${flink.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-avro-confluent-registry</artifactId>
+			<version>${flink.version}</version>
+		</dependency>
+
+
+
 
 		<!-- Add logging framework, to produce console output when running in the IDE. -->
 		<!-- These dependencies are excluded from the application JAR by default. -->
@@ -104,7 +117,13 @@ under the License.
 			<version>${log4j.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>20.1.0</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

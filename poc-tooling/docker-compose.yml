@@ -45,6 +45,7 @@ services:
     depends_on:
       - zookeeper
       - broker
+      - schema-registry
     ports:
       - "8083:8083"
     volumes: 
@@ -62,10 +63,10 @@ services:
       CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
       CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-#      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
-#      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-#      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"     # no longer necessary since kafka >=2.0
+#      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+#      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
 #      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
       CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
@@ -109,15 +110,15 @@ services:
       - broker
 
       
-#  schema-registry:
-#    image: confluentinc/cp-schema-registry:6.1.1
-#    hostname: schema-registry
-#    container_name: schema-registry
-#    depends_on:
-#      - zookeeper
-#      - broker
-#    ports:
-#      - '8081:8081'
-#    environment:
-#      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-#      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+  schema-registry:
+    image: confluentinc/cp-schema-registry:6.1.1
+    hostname: schema-registry
+    container_name: schema-registry
+    depends_on:
+      - zookeeper
+      - broker
+    ports:
+      - '8082:8081'
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181

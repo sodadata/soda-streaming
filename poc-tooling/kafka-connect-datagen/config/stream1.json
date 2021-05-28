@@ -1,12 +1,11 @@
 {
-  "name": "datagen-stream1",
-  "config": {
     "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
     "kafka.topic": "stream1",
     "schema.filename": "/tmp/schema/stream1.avro",
-    "schema.keyfield": "key",
-    "value.converter.schemas.enable": "false",
+    "schema.keyfield": "col0",
+    "value.converter": "io.confluent.connect.avro.AvroConverter",
+    "value.converter.schema.registry.url": "http://schema-registry:8081",
+    "value.converter.schemas.enable": "true",
     "max.interval": 100,
     "tasks.max": "1"
-  }
 }

@@ -56,7 +56,7 @@ If you want to go through the steps one by one, follow the steps below:
         configuration. This connector generates mock data and pushes this to Kafka.
         Setup this connector by:  
         ```
-        curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://localhost:8083/connectors/ -d @kafka-connect-datagen/config/stream1.json
+        curl -i -X PUT -H Accept:application/json -H Content-Type:application/json http://localhost:8083/connectors/datagen-stream1/config -d @kafka-connect-datagen/config/stream1.json
         ```
         You should get a HTTP-201 Created response. Using the REST API endpoint at localhost:8083/connectors one can see the
         connector is added.  

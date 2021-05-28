@@ -18,17 +18,19 @@
 
 package soda.streaming;
 
-import org.apache.flink.api.common.functions.AggregateFunction;
-import org.apache.flink.api.common.functions.ReduceFunction;
-import org.apache.flink.api.common.serialization.SimpleStringSchema;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.jsonschema.JsonSchema;
+import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.flink.formats.avro.AvroDeserializationSchema;
+import org.apache.flink.formats.avro.registry.confluent.ConfluentRegistryAvroDeserializationSchema;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
-import soda.streaming.metrics.MessageCount;
-import java.util.Properties;
+import soda.streaming.metrics.AggregationCalculator;
+import soda.streaming.metrics.aggregation.AggregationMetricFactory;
+
+import java.util.*;
 
 /**
  * Skeleton for a Flink Streaming Job.
@@ -49,18 +51,29 @@ public class StreamingJob {
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
 		final String broker = (args.length > 0) ? args[0] : "broker:29092" ;
+		final String registry = (args.length > 1) ? args[1] : "schema-registry:8081" ;
+
+		final Schema schema = new Schema.Parser()
+				.parse(StreamingJob.class.getClassLoader().getResourceAsStream("expedia.avsc"));
 
 		Properties properties = new Properties();
 		properties.setProperty("bootstrap.servers", broker);
 		properties.setProperty("group.id", "data-monitor");
-		FlinkKafkaConsumer<String> stream1Consumer = new FlinkKafkaConsumer<>("stream1", new SimpleStringSchema(), properties);
-		stream1Consumer.setStartFromLatest();
-		DataStream<String> stream = env.addSource(stream1Consumer);
 
-		DataStream<Integer> output = stream
-				.windowAll(TumblingProcessingTimeWindows.of(Time.seconds(5)))
-				.aggregate(new MessageCount());
-		output.print();
+
+
+		final List<String> metrics = AggregationMetricFactory.getFactory().getRegisteredMetrics();
+		final List<String> topics = Arrays.asList("stream1");
+
+		topics.forEach(topic -> {
+			FlinkKafkaConsumer<GenericRecord> consumer = new FlinkKafkaConsumer<GenericRecord>(topic, AvroDeserializationSchema.forGeneric(schema), properties);
+			consumer.setStartFromLatest();
+			DataStream<GenericRecord> stream = env.addSource(consumer);
+			DataStream<String> output = stream
+					.windowAll(TumblingProcessingTimeWindows.of(Time.seconds(5)))
+					.aggregate(new AggregationCalculator(metrics));
+			output.print();
+		});
 
 		// execute program
 		env.execute("data-monitor");

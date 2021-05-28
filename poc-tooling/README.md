@@ -22,7 +22,13 @@ The config needs to be added in 4 places:
 
 you can start a demo datagenerator with:
 ```
-curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://localhost:8083/connectors/ -d @kafka-connect-datagen/config/stream1.json
+curl -i -X PUT -H Accept:application/json -H Content-Type:application/json http://localhost:8083/connectors/datagen-stream1/config -d @kafka-connect-datagen/config/stream1.json
+```
+
+once submitted, you can restart it if needed with:
+
+```
+curl -i -X POST http://localhost:8083/connectors/datagen-stream1/tasks/0/restart
 ```
 
 ### Versions:
