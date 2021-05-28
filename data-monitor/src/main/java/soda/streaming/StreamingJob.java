@@ -21,13 +21,15 @@ package soda.streaming;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.flink.formats.avro.AvroDeserializationSchema;
-import org.apache.flink.formats.avro.registry.confluent.ConfluentRegistryAvroDeserializationSchema;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+import soda.streaming.config.Parser;
+import soda.streaming.config.Warehouse;
 import soda.streaming.metrics.AggregationCalculator;
+import soda.streaming.metrics.AggregationWindowOutput;
 import soda.streaming.metrics.aggregation.AggregationMetricFactory;
 
 import java.util.*;
@@ -47,17 +49,21 @@ import java.util.*;
 public class StreamingJob {
 
 	public static void main(String[] args) throws Exception {
+		// read in the warehouse file
+		final String warehouse_config_path = (args.length > 0) ? args[0] : "warehouse_cluster.yml" ;
+		final Warehouse warehouse = Parser.parseWarehouseFile(warehouse_config_path);
+
+		System.out.printf("Read in warehouse file: \n %s%n", warehouse);
+
+
 		// set up the streaming execution environment
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-
-		final String broker = (args.length > 0) ? args[0] : "broker:29092" ;
-		final String registry = (args.length > 1) ? args[1] : "schema-registry:8081" ;
 
 		final Schema schema = new Schema.Parser()
 				.parse(StreamingJob.class.getClassLoader().getResourceAsStream("expedia.avsc"));
 
 		Properties properties = new Properties();
-		properties.setProperty("bootstrap.servers", broker);
+		properties.setProperty("bootstrap.servers", warehouse.getConnection().getURL());
 		properties.setProperty("group.id", "data-monitor");
 
 
@@ -71,7 +77,7 @@ public class StreamingJob {
 			DataStream<GenericRecord> stream = env.addSource(consumer);
 			DataStream<String> output = stream
 					.windowAll(TumblingProcessingTimeWindows.of(Time.seconds(5)))
-					.aggregate(new AggregationCalculator(metrics));
+					.aggregate(new AggregationCalculator(metrics), new AggregationWindowOutput(topic));
 			output.print();
 		});
 

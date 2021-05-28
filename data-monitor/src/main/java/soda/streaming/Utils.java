@@ -20,6 +20,7 @@ import soda.streaming.metrics.aggregation.ColumnAggregationMetricAggregator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Utils {
     /*
@@ -46,7 +47,6 @@ public class Utils {
     */
     public static String formatAggregatorOutput(Map<String, BaseAggregationMetric<GenericRecord,?,?>> metricMap,String timestamp, String topic ,String nextTimeStamp){
             StringBuilder out = new StringBuilder();
-            out.append("--------- \n");
             out.append("Scan summary --- \n");
             out.append(String.format("  | timestamp: %s\n", timestamp));
             out.append(String.format("  | topic: %s\n", topic));
@@ -58,10 +58,10 @@ public class Utils {
                 if (result instanceof ColumnAggregationMetricAggregator){
                     ((Map<String, Object>) result.getResult()).forEach((k,v) -> {
                         columnMetrics.putIfAbsent(k,new HashMap<>());
-                        columnMetrics.get(k).put(metric,v.toString());
+                        columnMetrics.get(k).put(metric,formatValue(v));
                     });
                 } else {
-                    out.append(String.format("  | %s: %s \n", metric, result.getResult()));
+                    out.append(String.format("  | %s: %s \n", metric, formatValue(result.getResult())));
                 }
             }
         for (Iterator<String> it = columnMetrics.keySet().stream().sorted().iterator(); it.hasNext(); ) {
@@ -75,5 +75,25 @@ public class Utils {
             out.append(" ---- \n");
             out.append(String.format("Next output at: %s\n", nextTimeStamp));
             return out.toString();
+    }
+
+    private static String formatValue(Object value){
+        if (value instanceof Double) {
+            if ((Double) value >= 1.0) {
+                return String.format("%.2f",value);
+            } else {
+                return String.format("%.4f",value);
+            }
+
+        } else if (value instanceof Map) {
+            return ((Map<String, Object>) value)
+                    .entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            x->formatValue(x.getValue())
+                    )).toString();
+        }
+        return value.toString();
     }
 }

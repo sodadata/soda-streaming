@@ -2,19 +2,21 @@ package soda.streaming.metrics;
 
 import org.apache.avro.generic.GenericRecord;
 import org.apache.flink.api.common.functions.AggregateFunction;
+import org.apache.flink.api.common.functions.RichAggregateFunction;
 import org.apache.flink.streaming.runtime.operators.windowing.KeyMap;
 import soda.streaming.Utils;
 import soda.streaming.metrics.aggregation.AggregationMetricFactory;
 import soda.streaming.metrics.aggregation.BaseAggregationMetric;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class AggregationCalculator implements AggregateFunction<GenericRecord, AggregationAccumulator, String> {
+public class AggregationCalculator implements AggregateFunction<GenericRecord, AggregationAccumulator, Map<String, BaseAggregationMetric<GenericRecord,?,?>>> {
 
-    private List<String> metrics;
+    private final List<String> metrics;
 
     public AggregationCalculator(List<String> metrics) {
         this.metrics = metrics;
@@ -32,7 +34,7 @@ public class AggregationCalculator implements AggregateFunction<GenericRecord, A
     }
 
     @Override
-    public String getResult(AggregationAccumulator acc) {
+    public Map<String, BaseAggregationMetric<GenericRecord,?,?>>  getResult(AggregationAccumulator acc) {
         return acc.getResult();
     }
 
@@ -58,11 +60,8 @@ class AggregationAccumulator {
         }
     }
 
-    public String getResult(){
-        //TODO: fix placeholders for timestamp and stream names
-        return Utils.formatAggregatorOutput(metrics,"[Start timestamp]","[Stream-name]","[Next timestamp]");
+    public Map<String, BaseAggregationMetric<GenericRecord,?,?>> getResult(){
+        return metrics;
     }
-
-
-
 }
+

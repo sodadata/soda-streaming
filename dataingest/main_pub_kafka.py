@@ -29,11 +29,13 @@ def get_avro_data_from_file(path:str):
 
 schema = read_schema("./schemas/expedia.avsc")
 
-for i in range(1000):
-    time.sleep(2)
-    random_data = generate_random_record()
-    avro_serialized_data = get_kafka_ready_avro_record(schema, random_data)
-    p.produce("stream1", avro_serialized_data, callback=delivery_report)
-    print("produced new message")
-p.flush()
+throughput = 100
+while True:
+    for i in range(100):
+        time.sleep(1/throughput)
+        random_data = generate_random_record()
+        avro_serialized_data = get_kafka_ready_avro_record(schema, random_data)
+        p.produce("stream1", avro_serialized_data, callback=delivery_report)
+        print("produced new message")
+    p.flush()
 

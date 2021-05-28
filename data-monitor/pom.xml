@@ -72,7 +72,7 @@ under the License.
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Add connector dependencies here. They must be in the default scope (compile). -->
+		<!-- Add other dependencies here. They must be in the default scope (compile). -->
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-connector-kafka_${scala.binary.version}</artifactId>
@@ -89,6 +89,12 @@ under the License.
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-avro-confluent-registry</artifactId>
 			<version>${flink.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.28</version>
 		</dependency>
 
 
@@ -123,7 +129,13 @@ under the License.
             <version>20.1.0</version>
             <scope>runtime</scope>
         </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
