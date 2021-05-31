@@ -13,7 +13,7 @@ if __name__ == "__main__":
     consumer = Consumer(**conf)
     topic = consumer.subscribe(['stream1'])
 
-    schema_path = "./schemas/expedia.avsc"
+    schema_path = "../schemas/expedia.avsc"
     schema = avro.schema.parse(open(schema_path).read())
 
     try:

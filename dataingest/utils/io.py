@@ -40,6 +40,7 @@ def get_kafka_ready_avro_record(schema, random_record):
     raw_bytes = bytes_writer.getvalue()
     return raw_bytes
 
+
 class CustomAvroKafkaPublisher(threading.Thread):
     """
     Generalized avropublisher for random data
@@ -66,6 +67,8 @@ class CustomAvroKafkaPublisher(threading.Thread):
                 counter_messages_published +=1
                 logger.debug(f"Published to {self.topic_name} | totalling to {counter_messages_published} messages")
                 time.sleep(1/self.data_generation_rate_msg_sec)
+            if counter_messages_published % 100 == 0:
+                logger.info(f"Published to {self.topic_name} |Content: {random_data}| totalling to {counter_messages_published} messages")
             p.flush()
 
 

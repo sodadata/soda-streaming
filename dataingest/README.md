@@ -2,28 +2,35 @@
 
 ## Project structure:
 ```
+├── create_expedia_avro.py
 ├── data
-│   ├── expedia_test.avro
 │   └── final_expedia.json
-├── expedia.avro
-├── main_expedia_avro.py
+├── Dockerfile
+├── main_pub_kafka.py
 ├── README.md
 ├── requirements.txt
 ├── schemas
-│   └── expedia.avsc
+│   ├── expedia.avsc
+│   └── hellofresh.avsc
+├── test
+│   └── validate_avro_format_from_kafka.py
 └── utils
     ├── generator.py
     ├── __init__.py
     ├── io.py
-    └── __pycache__
+    ├── pubsub
+
 ```
 
 ## Run project
 1. Create virtualenv
 2. Install python requirements through `pip install -r requirements.txt`
-3. Run main_expedia_avro.py after setting the required variables:
-   1. *numbers_of_records_to_randomly_create*
-   2. *show_content_stdout*
+3. Run main_pub_kafka.py after specifying the necessary details for the
+*CustomAvroKafkaPublisher*.
+4. To change the data generation rate for the different customers, set
+the env-vars to a value of your choice; env-var has the following format:
+```<CUSTOMER_NAME>_RATE_MSG_SEC```
+
 
 
 ## Expedia data example
@@ -43,8 +50,6 @@ chosen and the datastructure was flattened.
   "propertyTypes": "Condo"
 }
 ```
-
-
 
 
 
