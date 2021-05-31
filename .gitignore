@@ -113,3 +113,5 @@ buildNumber.properties
 /.idea/
 
 *.iml
+
+!poc-tooling/data-monitor.jar
