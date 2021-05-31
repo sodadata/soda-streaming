@@ -19,6 +19,7 @@
 package soda.streaming;
 
 import org.apache.avro.Schema;
+import org.apache.avro.SchemaParseException;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.flink.formats.avro.AvroDeserializationSchema;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -32,6 +33,7 @@ import soda.streaming.metrics.AggregationCalculator;
 import soda.streaming.metrics.AggregationWindowOutput;
 import soda.streaming.metrics.aggregation.AggregationMetricFactory;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -59,9 +61,6 @@ public class StreamingJob {
 		// set up the streaming execution environment
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-		final Schema schema = new Schema.Parser()
-				.parse(StreamingJob.class.getClassLoader().getResourceAsStream("expedia.avsc"));
-
 		Properties properties = new Properties();
 		properties.setProperty("bootstrap.servers", warehouse.getConnection().getURL());
 		properties.setProperty("group.id", "data-monitor");
@@ -69,16 +68,24 @@ public class StreamingJob {
 
 
 		final List<String> metrics = AggregationMetricFactory.getFactory().getRegisteredMetrics();
-		final List<String> topics = Arrays.asList("stream1");
+		final List<String> topics = Arrays.asList("stream1","stream2");
 
 		topics.forEach(topic -> {
-			FlinkKafkaConsumer<GenericRecord> consumer = new FlinkKafkaConsumer<GenericRecord>(topic, AvroDeserializationSchema.forGeneric(schema), properties);
-			consumer.setStartFromLatest();
-			DataStream<GenericRecord> stream = env.addSource(consumer);
-			DataStream<String> output = stream
-					.windowAll(TumblingProcessingTimeWindows.of(Time.seconds(5)))
-					.aggregate(new AggregationCalculator(metrics), new AggregationWindowOutput(topic));
-			output.print();
+			try {
+				Schema schema = new Schema.Parser()
+						.parse(StreamingJob.class.getClassLoader().getResourceAsStream(String.format("schema-registry/%s.avsc",topic )));
+				FlinkKafkaConsumer<GenericRecord> consumer = new FlinkKafkaConsumer<>(topic, AvroDeserializationSchema.forGeneric(schema), properties);
+				consumer.setStartFromLatest();
+				DataStream<GenericRecord> stream = env.addSource(consumer);
+				DataStream<String> output = stream
+						.windowAll(TumblingProcessingTimeWindows.of(Time.seconds(10)))
+						.aggregate(new AggregationCalculator(metrics), new AggregationWindowOutput(topic));
+				output.print();
+			} catch (IOException | SchemaParseException e) {
+				System.out.printf("ERROR: could not read/find schema file for %s%n",topic);
+				System.out.println(e.toString());
+				//TODO: should we abort the whole program, or execute with the streams that are valid.
+			}
 		});
 
 		// execute program

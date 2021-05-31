@@ -66,9 +66,9 @@ public class Utils {
             }
         for (Iterator<String> it = columnMetrics.keySet().stream().sorted().iterator(); it.hasNext(); ) {
             String col = it.next();
-            for(Map.Entry<String,String> metricEntry:columnMetrics.get(col).entrySet()){
-                String metric = metricEntry.getKey();
-                String result = metricEntry.getValue();
+            for(Iterator<String> it2 = columnMetrics.get(col).keySet().stream().sorted().iterator(); it2.hasNext();){
+                String metric = it2.next();
+                String result = columnMetrics.get(col).get(metric);
                 out.append(String.format("  | %s(%s): %s \n", metric, col, result));
             }
         }
