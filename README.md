@@ -44,16 +44,12 @@ A more detailed README.md can be found at each specific component folder:
 │   └── overview-architecture.png
 ├── LICENSE
 ├── poc-tooling
-│   ├── automation
-│   ├── avro-tools-1.10.2.jar
 │   ├── build-new-jar.sh
 │   ├── docker-compose.yml
 │   ├── e2edemo.sh
 │   ├── README.md
 │   ├── streaming-monitor.jar
 │   ├── submit-job.sh
-│   ├── test.avro
-│   └── test.json
 ├── README.md
 └── streaming-monitor
     ├── pom.xml
