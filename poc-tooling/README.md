@@ -11,8 +11,13 @@ This will start:
 - python data generator
 - flink cluster
 
+### Utility scripts:
 
+`e2edemo.sh` <br> Run end-to-end demo pipeline
 
+`build-new-jar.sh` <br> Build a new jar and replace `streaming-monito.jar`
+
+`submit-job.sh` <br> Submit the `streaming-monitor.jar` to the flink cluster 
 ### Versions:
 
 - `Kafka 2.7.0`

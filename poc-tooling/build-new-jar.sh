@@ -10,8 +10,8 @@
 # limitations under the License.
 #
 
-cd ../data-monitor
+cd ../streaming-monitor
 mvn clean package
 cd ..
-cp $(find data-monitor/target/ -type f -name "data-monitor-*.jar") poc-tooling/data-monitor.jar
+cp $(find streaming-monitor/target/ -type f -name "streaming-monitor-*.jar") poc-tooling/streaming-monitor.jar
 cd poc-tooling

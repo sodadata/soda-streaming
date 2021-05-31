@@ -114,4 +114,4 @@ buildNumber.properties
 
 *.iml
 
-!poc-tooling/data-monitor.jar
+!poc-tooling/streaming-monitor.jar

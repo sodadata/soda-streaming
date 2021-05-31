@@ -1,9 +1,11 @@
+**!! This repository is in an early alpha stage. !!**
+
 # Soda-streaming
 
 ## Goal
 
 This project contains 3 main building blocks:
-- [data-monitor](/data-monitor/README.md)
+- [streaming-monitor](/streaming-monitor/README.md)
 - [data-ingest](/dataingest/README.md)
 - [poc-tooling](/poc-tooling/README.md)
 
@@ -43,7 +45,7 @@ If you want to go through the steps one by one, follow the steps below:
 
     (This requires Java 11 or higher)
     ```
-    cd ../data-monitor
+    cd ../streaming-monitor
     mvn clean package
     ```
 

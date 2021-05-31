@@ -1,5 +1,0 @@
-name: kafka_warehouse_from_cluster
-connection:
-  type: kafka # or pulsar or kinesis
-  host: broker
-  port: 29092
