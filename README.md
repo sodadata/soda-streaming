@@ -45,15 +45,13 @@ If you want to go through the steps one by one, follow the steps below:
 
     (This requires Java 11 or higher)
     ```
-    cd ../streaming-monitor
-    mvn clean package
+    ./build-new-jar.sh
     ```
 
 4. Submit the job to the Flink cluster, and inspect the taskmanager logs for the output.
 The job will calculate the amount of messages on the stream for a tumbling 5sec window, and print out the result.
     
    ```
-    cd ../poc-tooling
     ./submit-job.sh
     ```
     You can also check the [Flink UI](http://localhost:8081)
