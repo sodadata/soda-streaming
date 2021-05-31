@@ -6,8 +6,9 @@ from utils.io import CustomAvroKafkaPublisher
 import logging
 
 # Set proper logging
-logging.basicConfig(format="%(asctime)s | %(threadName)s | %(message)s",
-                    level=logging.DEBUG,
+LOGLEVEL = os.environ.get('LOGLEVEL', 'DEBUG').upper()
+logging.basicConfig(format="%(asctime)s | %(levelname)s | %(threadName)s | %(message)s",
+                    level=LOGLEVEL,
                     datefmt="%H:%M:%S")
 
 
