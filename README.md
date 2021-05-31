@@ -15,11 +15,11 @@ As such, they are a good source for data monitoring.
 The system is customizable, generalizable and easily deployable. The user is able to specify which metrics should be
 tracked for each stream and, in the future, should be able to define the additional tests that should be done.
 
-Several components are setup to constitute the whole infrastructure in order to have and end-to-end working pipeline:
+Several components are setup to constitute the whole infrastructure in order to have an end-to-end working pipeline:
 1. Apache Kafka -> messaging bus
-2. Data Ingest -> a component that generates avro data and makes this data available through Kafka.
+2. Data Ingest -> a component generating avro data and making this data available through Kafka.
 3. Stram Monitor -> flink job that is easily configurable to calculate specific data quality metrics.
-4. Infrastructure -> docker-compose setup that automatically builds the aforementioned components towards a data quality pipeline
+4. Infrastructure -> docker-compose setup that automatically builds the aforementioned components towards a data quality pipeline.
 
 ![schematic](docs/overview-architecture.png)
 
@@ -64,7 +64,7 @@ A more detailed README.md can be found at each specific component folder:
 
 ### Proof of Concept setup
 
-You can choose for this setup to run end-to-end (E2E) automatically running the `e2edemo.sh`.
+You can choose for this setup to run end-to-end (E2E) automatically running the `e2edemo.sh` script.
 ```
 e2edemo.sh
 ```
