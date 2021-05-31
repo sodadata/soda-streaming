@@ -9,6 +9,4 @@ ADD main_pub_kafka.py main_pub_kafka.py
 
 RUN pip install -r requirements.txt
 
-RUN pip list
-
 CMD ["python", "main_pub_kafka.py"]

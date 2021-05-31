@@ -1,5 +1,5 @@
 {"type": "record",
-"namespace": "klarrio.expedia",
+"namespace": "soda.expedia",
  "name": "HotelAvailability",
  "doc": "Hotel availability based on specific checkIn date with destination and maxbudget chosen by user",
  "fields": [

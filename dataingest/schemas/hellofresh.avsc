@@ -1,5 +1,5 @@
 {"type": "record",
-"namespace": "klarrio.hellofresh",
+"namespace": "soda.hellofresh",
  "name": "BoxChoiceDescription",
  "doc": "Description of specific choice of hello fresh box",
  "fields": [
