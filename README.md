@@ -1,6 +1,10 @@
 # Soda-streaming
-repository contains:
+
+## Goal
+
+This project contains 3 main building blocks:
 - [data-monitor](/data-monitor/README.md)
+- [data-ingest](/dataingest/README.md)
 - [poc-tooling](/poc-tooling/README.md)
 
 ## Proof of Concept
