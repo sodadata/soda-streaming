@@ -1,5 +1,5 @@
 ---
-version: '2.2'
+version: '3.3'
 services:
   zookeeper:
     image: wurstmeister/zookeeper
@@ -30,45 +30,6 @@ services:
         kafka.producer.async.DefaultEventHandler=INFO,
         state.change.logger=INFO
 
- 
-  connect:
-    image: confluentinc/kafka-connect-datagen:0.4.0-6.1.1
-    build:
-      context: kafka-connect-datagen
-      dockerfile: Dockerfile
-      args:
-        - KAFKA_CONNECT_DATAGEN_VERSION=0.4.0
-        - CP_VERSION=6.1.1
-    hostname: connect
-    container_name: connect
-    depends_on:
-      - zookeeper
-      - broker
-    ports:
-      - "8083:8083"
-    volumes: 
-      - $PWD/kafka-connect-datagen/schema:/tmp/schema
-    environment:
-      CONNECT_BOOTSTRAP_SERVERS: 'broker:29092'
-      CONNECT_REST_ADVERTISED_HOST_NAME: connect
-      CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: compose-connect-group
-      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
-      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-#      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
-#      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
-      CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-
   jobmanager:
     image: flink:1.13.0-java11
     hostname: jobmanager
@@ -88,22 +49,21 @@ services:
     depends_on:
       - jobmanager
     command: taskmanager
-    scale: 1
+    deploy:
+      replicas: 1
     environment:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 2
-      
-#  schema-registry:
-#    image: confluentinc/cp-schema-registry:6.1.1
-#    hostname: schema-registry
-#    container_name: schema-registry
-#    depends_on:
-#      - zookeeper
-#      - broker
-#    ports:
-#      - '8081:8081'
-#    environment:
-#      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-#      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+
+  data-generator:
+    container_name: data-generator
+    build:
+      context: ../dataingest
+      dockerfile: Dockerfile
+    environment:
+      - BOOTSTRAP_SERVER=broker:29092
+    depends_on:
+      - zookeeper
+      - broker

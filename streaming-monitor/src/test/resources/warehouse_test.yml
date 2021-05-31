@@ -1,0 +1,5 @@
+name: test_warehouse
+connection:
+  type: kafka # or pulsar or kinesis
+  host: localhost
+  port: 9992
