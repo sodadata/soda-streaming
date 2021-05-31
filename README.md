@@ -2,24 +2,74 @@
 
 # Soda-streaming
 
-## Goal
+## Background and project goal
+The number of use cases which use some form of real-time data processing has increased drastically over the last decades.
+Data is generated at an unprecedented volume, velocity and variety. This brings up the concern of guaranteeing data
+quality of these generated streams. To provide a solution for this, this repository contains an automated streaming
+data quality monitoring system. This system generates real-time insights on the quality of data and visualizes
+it in the Soda Cloud.
 
-This project contains 3 main building blocks:
+The initial scope of the monitor is data residing on messaging systems. The first integration is with Apache Kafka.
+Messaging systems are systems which form an intermediary between data producers and data consumers.
+As such, they are a good source for data monitoring. 
+The system is customizable, generalizable and easily deployable. The user is able to specify which metrics should be
+tracked for each stream and, in the future, should be able to define the additional tests that should be done.
+
+Several components are setup to constitute the whole infrastructure in order to have and end-to-end working pipeline:
+1. Apache Kafka -> messaging bus
+2. Data Ingest -> a component that generates avro data and makes this data available through Kafka.
+3. Stram Monitor -> flink job that is easily configurable to calculate specific data quality metrics.
+4. Infrastructure -> docker-compose setup that automatically builds the aforementioned components towards a data quality pipeline
+
+![schematic](docs/overview-architecture.png)
+
+A more detailed README.md can be found at each specific component folder:
 - [streaming-monitor](/streaming-monitor/README.md)
 - [data-ingest](/dataingest/README.md)
 - [poc-tooling](/poc-tooling/README.md)
 
-## Proof of Concept
+## Project structure
+```
+├── dataingest
+│   ├── create_expedia_avro.py
+│   ├── data
+│   ├── Dockerfile
+│   ├── main_pub_kafka.py
+│   ├── README.md
+│   ├── requirements.txt
+│   ├── schemas
+│   ├── test
+│   └── utils
+├── docs
+│   └── overview-architecture.png
+├── LICENSE
+├── poc-tooling
+│   ├── automation
+│   ├── avro-tools-1.10.2.jar
+│   ├── build-new-jar.sh
+│   ├── docker-compose.yml
+│   ├── e2edemo.sh
+│   ├── README.md
+│   ├── streaming-monitor.jar
+│   ├── submit-job.sh
+│   ├── test.avro
+│   └── test.json
+├── README.md
+└── streaming-monitor
+    ├── pom.xml
+    ├── README.md
+    └── src
+```
 
-### Phase 2
 
-### Setup
-0. You can choose for this setup to run end-to-end (E2E) automatically running the `e2edemo.sh`.
+### Proof of Concept setup
+
+You can choose for this setup to run end-to-end (E2E) automatically running the `e2edemo.sh`.
 ```
 e2edemo.sh
 ```
 
-If you want to go through the steps one by one, follow the steps below:
+If you want to go through the setup of the infrastructure one by one, follow the steps listed below:
 
 1. Start the docker-compose environment.
 
@@ -39,7 +89,8 @@ If you want to go through the steps one by one, follow the steps below:
     ```
     docker-compose exec broker opt/kafka/bin/kafka-console-consumer.sh --topic stream1 --bootstrap-server localhost:9092
     ```
-    This should show messages as `Struct{key=key-xx, value=xxx}` if the data generator is running correctly.
+    This should show avro serialized messages if the data generator is running correctly.  
+    Note: So far 2 streams are defined (*stream1*, *stream2*), one can check the content of a specific stream by specifying `--topic <topic-name>`
 
 3. Build a specific flink job:
 
