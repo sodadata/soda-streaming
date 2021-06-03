@@ -3,7 +3,7 @@
 Repository containing the tooling for showcasing the end-to-end POC demo
 
 ### Start the full test environment:
-`docker-compose up -d`
+`docker-compose up --build -d`
 
 This will start:
 - kafka zookeeper

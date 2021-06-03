@@ -62,7 +62,7 @@ public class StreamingJob {
 
 
 		final List<String> metrics = AggregationMetricFactory.getFactory().getRegisteredMetrics();
-		final List<String> topics = Arrays.asList("stream1","stream2");
+		final List<String> topics = Arrays.asList("expedia","hellofresh");
 
 		topics.forEach(topic -> {
 			try {

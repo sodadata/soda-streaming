@@ -24,7 +24,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CREATE_TOPICS: 'stream1:1:1'
+      KAFKA_CREATE_TOPICS: 'expedia:1:1,hellofresh:1:1'
       KAFKA_LOG4J_LOGGERS: >-
         kafka.controller=INFO,
         kafka.producer.async.DefaultEventHandler=INFO,
@@ -58,6 +58,7 @@ services:
         taskmanager.numberOfTaskSlots: 2
 
   data-generator:
+    image: data-generator
     container_name: data-generator
     build:
       context: ../dataingest

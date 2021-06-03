@@ -15,7 +15,7 @@ logging.basicConfig(format="%(asctime)s | %(levelname)s | %(threadName)s | %(mes
 if __name__ == "__main__":
     expedia_kafka_config = {
         "bootstrap_server": os.getenv("BOOTSTRAP_SERVER", 'localhost:9092'),
-        "topic_name": "stream1",
+        "topic_name": "expedia",
         "topic_description": "expedia"
     }
     expedia_data_generation_rate_msg_sec = int(os.getenv("EXPEDIA_RATE_MSG_SEC", 10))
@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     hellofresh_kafka_config = {
         "bootstrap_server": os.getenv("BOOTSTRAP_SERVER", 'localhost:9092'),
-        "topic_name": "stream2",
+        "topic_name": "hellofresh",
         "topic_description": "hellofresh"
     }
     hellofresh_data_generation_rate_msg_sec = int(os.getenv("HELLOFRESH_RATE_MSG_SEC", 5))
