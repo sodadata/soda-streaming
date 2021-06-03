@@ -13,26 +13,26 @@ logging.basicConfig(format="%(asctime)s | %(levelname)s | %(threadName)s | %(mes
 
 
 if __name__ == "__main__":
-    expedia_kafka_config = {
+    travel_kafka_config = {
         "bootstrap_server": os.getenv("BOOTSTRAP_SERVER", 'localhost:9092'),
-        "topic_name": "stream1",
-        "topic_description": "expedia"
+        "topic_name": "travel",
+        "topic_description": "travel"
     }
-    expedia_data_generation_rate_msg_sec = int(os.getenv("EXPEDIA_RATE_MSG_SEC", 10))
-    expedia_publisher = CustomAvroKafkaPublisher(kafka_config=expedia_kafka_config,
-                                                 data_generation_rate_msg_sec=expedia_data_generation_rate_msg_sec)
+    travel_data_generation_rate_msg_sec = int(os.getenv("TRAVEL_RATE_MSG_SEC", 10))
+    travel_publisher = CustomAvroKafkaPublisher(kafka_config=travel_kafka_config,
+                                                 data_generation_rate_msg_sec=travel_data_generation_rate_msg_sec)
 
-    hellofresh_kafka_config = {
+    food_kafka_config = {
         "bootstrap_server": os.getenv("BOOTSTRAP_SERVER", 'localhost:9092'),
-        "topic_name": "stream2",
-        "topic_description": "hellofresh"
+        "topic_name": "food",
+        "topic_description": "food"
     }
-    hellofresh_data_generation_rate_msg_sec = int(os.getenv("HELLOFRESH_RATE_MSG_SEC", 5))
-    hellofresh_publisher = CustomAvroKafkaPublisher(kafka_config=hellofresh_kafka_config,
-                                                    data_generation_rate_msg_sec=hellofresh_data_generation_rate_msg_sec)
+    food_data_generation_rate_msg_sec = int(os.getenv("FOOD_RATE_MSG_SEC", 5))
+    food_publisher = CustomAvroKafkaPublisher(kafka_config=food_kafka_config,
+                                                    data_generation_rate_msg_sec=food_data_generation_rate_msg_sec)
 
 
-    publishers = [expedia_publisher, hellofresh_publisher]
+    publishers = [travel_publisher, food_publisher]
     for publisher in publishers:
         publisher.start()
         #publisher.join()

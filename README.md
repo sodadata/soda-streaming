@@ -1,5 +1,5 @@
-**!! This repository is in an early alpha stage. !!**
-
+**!! This repository is in an early alpha stage. !!** <br>
+    At the current state, it does not yet contain a sufficient test suite.
 # Soda-streaming
 
 ## Background and project goal
@@ -21,7 +21,7 @@ Several components are setup to constitute the whole infrastructure in order to 
 3. Stram Monitor -> flink job that is easily configurable to calculate specific data quality metrics.
 4. Infrastructure -> docker-compose setup that automatically builds the aforementioned components towards a data quality pipeline.
 
-![schematic](docs/overview-architecture.png)
+![schematic](docs/archi-overview.png)
 
 A more detailed README.md can be found at each specific component folder:
 - [streaming-monitor](/streaming-monitor/README.md)
@@ -31,7 +31,7 @@ A more detailed README.md can be found at each specific component folder:
 ## Project structure
 ```
 ├── dataingest
-│   ├── create_expedia_avro.py
+│   ├── create_travel_avro.py
 │   ├── data
 │   ├── Dockerfile
 │   ├── main_pub_kafka.py
@@ -64,6 +64,7 @@ You can choose for this setup to run end-to-end (E2E) automatically running the 
 ```
 e2edemo.sh
 ```
+An overview of the expected Flink job logs can be found [here](/docs/e2edemo_expected_output_flink.md).  
 
 If you want to go through the setup of the infrastructure one by one, follow the steps listed below:
 
@@ -77,16 +78,16 @@ If you want to go through the setup of the infrastructure one by one, follow the
     
     ```
     cd poc-tooling
-    docker-compose up -d
+    docker-compose up --build -d
     ```
 
 2. Check the data on kafka:
 
     ```
-    docker-compose exec broker opt/kafka/bin/kafka-console-consumer.sh --topic stream1 --bootstrap-server localhost:9092
+    docker-compose exec broker opt/kafka/bin/kafka-console-consumer.sh --topic travel --bootstrap-server localhost:9092
     ```
     This should show avro serialized messages if the data generator is running correctly.  
-    Note: So far 2 streams are defined (*stream1*, *stream2*), one can check the content of a specific stream by specifying `--topic <topic-name>`
+    Note: So far 2 streams are defined (*travel*, *food*), one can check the content of a specific stream by specifying `--topic <topic-name>`
 
 3. Build a specific flink job:
 
@@ -109,3 +110,4 @@ The job will calculate the amount of messages on the stream for a tumbling 5sec 
     docker-compose down
     ```
     All docker containers and networks will be stopped and removed. You can validate this by running `docker ps`.
+    

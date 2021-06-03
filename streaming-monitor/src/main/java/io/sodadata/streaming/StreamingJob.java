@@ -46,7 +46,7 @@ public class StreamingJob {
 
 	public static void main(String[] args) throws Exception {
 		// read in the warehouse file
-		final String warehouse_config_path = (args.length > 0) ? args[0] : "warehouse_cluster.yml" ;
+		final String warehouse_config_path = (args.length > 0) ? args[0] : "datasource_cluster.yml";
 		final Warehouse warehouse = Parser.parseWarehouseFile(warehouse_config_path);
 
 		System.out.printf("Read in warehouse file: \n %s%n", warehouse);
@@ -62,7 +62,7 @@ public class StreamingJob {
 
 
 		final List<String> metrics = AggregationMetricFactory.getFactory().getRegisteredMetrics();
-		final List<String> topics = Arrays.asList("stream1","stream2");
+		final List<String> topics = Arrays.asList("travel","food");
 
 		topics.forEach(topic -> {
 			try {

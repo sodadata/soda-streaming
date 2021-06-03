@@ -1,5 +1,0 @@
-name: kafka_warehouse_from_local
-connection:
-  type: kafka # or pulsar or kinesis
-  host: localhost
-  port: 9092
