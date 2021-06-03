@@ -21,7 +21,7 @@ Several components are setup to constitute the whole infrastructure in order to 
 3. Stram Monitor -> flink job that is easily configurable to calculate specific data quality metrics.
 4. Infrastructure -> docker-compose setup that automatically builds the aforementioned components towards a data quality pipeline.
 
-![schematic](docs/infrastructure_overview.png)
+![schematic](docs/archi-overview.png)
 
 A more detailed README.md can be found at each specific component folder:
 - [streaming-monitor](/streaming-monitor/README.md)
@@ -31,7 +31,7 @@ A more detailed README.md can be found at each specific component folder:
 ## Project structure
 ```
 ├── dataingest
-│   ├── create_expedia_avro.py
+│   ├── create_travel_avro.py
 │   ├── data
 │   ├── Dockerfile
 │   ├── main_pub_kafka.py
@@ -84,10 +84,10 @@ If you want to go through the setup of the infrastructure one by one, follow the
 2. Check the data on kafka:
 
     ```
-    docker-compose exec broker opt/kafka/bin/kafka-console-consumer.sh --topic expedia --bootstrap-server localhost:9092
+    docker-compose exec broker opt/kafka/bin/kafka-console-consumer.sh --topic travel --bootstrap-server localhost:9092
     ```
     This should show avro serialized messages if the data generator is running correctly.  
-    Note: So far 2 streams are defined (*expedia*, *hellofresh*), one can check the content of a specific stream by specifying `--topic <topic-name>`
+    Note: So far 2 streams are defined (*travel*, *food*), one can check the content of a specific stream by specifying `--topic <topic-name>`
 
 3. Build a specific flink job:
 

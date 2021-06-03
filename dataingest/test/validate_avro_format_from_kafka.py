@@ -11,9 +11,9 @@ if __name__ == "__main__":
             'group.id': 'my_group',
             'default.topic.config': {'auto.offset.reset': 'smallest'}}
     consumer = Consumer(**conf)
-    topic = consumer.subscribe(['expedia'])
+    topic = consumer.subscribe(['travel'])
 
-    schema_path = "../schemas/expedia.avsc"
+    schema_path = "../schemas/travel.avsc"
     schema = avro.schema.parse(open(schema_path).read())
 
     try:

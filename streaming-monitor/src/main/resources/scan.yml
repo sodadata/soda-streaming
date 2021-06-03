@@ -1,4 +1,4 @@
-stream_name: expedia
+stream_name: travel
 schema: internal_registry # or external_registry or auto 
 schema_type: avro # or protobuf or json or csv
 metrics:

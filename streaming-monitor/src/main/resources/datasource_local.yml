@@ -1,0 +1,5 @@
+name: kafka_datasource_from_local
+connection:
+  type: kafka # or pulsar or kinesis
+  host: localhost
+  port: 9092

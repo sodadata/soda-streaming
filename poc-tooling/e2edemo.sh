@@ -2,7 +2,7 @@
 
 
 consume_messages_from_kafka_for_limited_time() {
-  timeout -s SIGKILL --foreground ${1-2m} docker-compose exec broker opt/kafka/bin/kafka-console-consumer.sh --topic expedia --bootstrap-server localhost:9092 --max-messages ${2-10}
+  timeout -s SIGKILL --foreground ${1-2m} docker-compose exec broker opt/kafka/bin/kafka-console-consumer.sh --topic travel --bootstrap-server localhost:9092 --max-messages ${2-10}
 }
 
 inspect_flink_taskmanager() {

@@ -1,0 +1,17 @@
+{"type": "record",
+"namespace": "klarrio.travel",
+ "name": "HotelAvailability",
+ "doc": "Hotel availability based on specific checkIn date with destination and maxbudget chosen by user",
+ "fields": [
+     {"name": "checkInDateYear", "type": "int"},
+     {"name": "checkInDateMonth",  "type": "int"},
+     {"name": "checkInDateDay", "type": "int"},
+     {"name": "destinationRegionId",  "type": ["string", "null"]},
+     {"name": "destinationRegionName", "type": "string"},
+     {"name": "maxBudgetEuro",  "type": ["float","null"]},
+     {"name": "propertyTypes", "type":
+        {   "name":"propertyType",
+            "type": "enum",
+            "symbols" : ["Hotel", "Villa", "Apartment", "Condo", "Motel", "Bed_Breakfast", "Private_Vacation_Home"]}}
+ ]
+}

@@ -6,7 +6,7 @@ taskmanager       | Next output at: Thu Jun 03 09:10:40 UTC 2021
 taskmanager       | 
 taskmanager       | Scan summary --- 
 taskmanager       |   | timestamp: Thu Jun 03 09:10:40 UTC 2021
-taskmanager       |   | topic: hellofresh
+taskmanager       |   | topic: food
 taskmanager       |   | message-count: 50 
 taskmanager       |   | null-count(boxPrice): 29 
 taskmanager       |   | number-avg(boxPrice): 6.65 
@@ -28,7 +28,7 @@ taskmanager       | Next output at: Thu Jun 03 09:10:50 UTC 2021
 taskmanager       | 
 taskmanager       | Scan summary --- 
 taskmanager       |   | timestamp: Thu Jun 03 09:10:40 UTC 2021
-taskmanager       |   | topic: expedia
+taskmanager       |   | topic: travel
 taskmanager       |   | message-count: 99 
 taskmanager       |   | number-avg(checkInDateDay): 15.56 
 taskmanager       |   | number-max(checkInDateDay): 28.00 

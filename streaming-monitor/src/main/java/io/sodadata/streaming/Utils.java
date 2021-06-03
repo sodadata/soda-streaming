@@ -29,7 +29,7 @@ public class Utils {
             ...
             |  Scan summary ------
             |  timestamp: 14:00:00 06/05/2021
-            |  stream_name: expedia
+            |  stream_name: travel
 	        |  message_count: 500
             |  missing_count: 2
             |  min(col1): 1

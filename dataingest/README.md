@@ -1,17 +1,17 @@
-# Expedia avro schema creation
+# Custom data generator
 
 ## Project structure:
 ```
-├── create_expedia_avro.py
+├── create_travel_avro.py
 ├── data
-│   └── final_expedia.json
+│   └── final_travel.json
 ├── Dockerfile
 ├── main_pub_kafka.py
 ├── README.md
 ├── requirements.txt
 ├── schemas
-│   ├── expedia.avsc
-│   └── hellofresh.avsc
+│   ├── travel.avsc
+│   └── food.avsc
 ├── test
 │   └── validate_avro_format_from_kafka.py
 └── utils
@@ -33,12 +33,12 @@ the env-vars to a value of your choice; env-var has the following format:
 
 
 
-## Expedia data example
+## Travel data example
 - As found during Hotel booking searches -> web developer -> json structure
-- A short version of this json has been used to create the `expedia_test.avro`
+- A short version of this json has been used to create the `travel_test.avro`
 file. Since the original json was heavily nested, some relevant fields were
 chosen and the datastructure was flattened.
-- Example json (you can see this pretty print structure through `jq '.' /data/final_expedia.json`)
+- Example json (you can see this pretty print structure through `jq '.' /data/final_travel.json`)
 ```
 {
   "checkInDateYear": 2014,
