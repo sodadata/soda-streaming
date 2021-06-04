@@ -13,12 +13,14 @@
 package io.sodadata.streaming.config;
 
 import java.util.List;
+import java.util.Map;
 
 public class Scan {
     private String stream_name;
     private RegistryType schema;
     private SchemaType schema_type;
     private List<String> metrics;
+    private Map<String,List<String>> columns;
 
     public String getStream_name() {
         return stream_name;
@@ -52,6 +54,14 @@ public class Scan {
         this.metrics = metrics;
     }
 
+    public Map<String,List<String>> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(Map<String,List<String>> columns) {
+        this.columns = columns;
+    }
+
 
     // Only INTERNAL_REGISTRY is supported for now
     public enum RegistryType{
@@ -66,5 +76,16 @@ public class Scan {
         AVRO,
 //        JSON,
 //        PROTOBUF
+    }
+
+    @Override
+    public String toString() {
+        return "Scan{" +
+                "stream_name='" + stream_name + '\'' +
+                ", schema=" + schema +
+                ", schema_type=" + schema_type +
+                ", metrics=" + metrics +
+                ", columns=" + columns +
+                '}';
     }
 }

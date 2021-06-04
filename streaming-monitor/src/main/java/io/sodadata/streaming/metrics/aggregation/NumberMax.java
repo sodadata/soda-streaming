@@ -8,7 +8,7 @@ public class NumberMax extends ColumnAggregationMetric<Number, Double, NumberMax
 
 
     protected NumberMax() {
-        super("number-max",Number.class);
+        super("number_max",Number.class);
     }
 
     @Override

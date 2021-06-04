@@ -8,7 +8,7 @@ public class NumberMin extends ColumnAggregationMetric<Number, Double, NumberMin
 
 
     protected NumberMin() {
-        super("number-min",Number.class);
+        super("number_min",Number.class);
     }
 
     @Override

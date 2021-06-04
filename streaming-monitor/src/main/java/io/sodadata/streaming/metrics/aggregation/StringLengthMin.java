@@ -7,7 +7,7 @@ public class StringLengthMin extends ColumnAggregationMetric<CharSequence, Integ
     private Integer lengthMin = null;
 
     protected StringLengthMin() {
-        super("string-length-min",CharSequence.class);
+        super("string_length_min",CharSequence.class);
     }
 
     @Override

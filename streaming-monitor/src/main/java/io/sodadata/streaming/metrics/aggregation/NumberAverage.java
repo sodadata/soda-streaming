@@ -9,7 +9,7 @@ public class NumberAverage extends ColumnAggregationMetric<Number, Double, Numbe
 
 
     protected NumberAverage() {
-        super("number-avg", Number.class);
+        super("number_avg", Number.class);
     }
 
     @Override

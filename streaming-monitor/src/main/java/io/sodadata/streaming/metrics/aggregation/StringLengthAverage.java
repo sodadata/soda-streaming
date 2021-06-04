@@ -8,7 +8,7 @@ public class StringLengthAverage extends ColumnAggregationMetric<CharSequence, D
     private int count = 0;
 
     protected StringLengthAverage() {
-        super("string-length-avg",CharSequence.class);
+        super("string_length_avg",CharSequence.class);
     }
 
     @Override

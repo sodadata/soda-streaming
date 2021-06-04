@@ -1,0 +1,13 @@
+stream_name: test
+schema: internal_registry # or external_registry or auto 
+schema_type: avro # or protobuf or json or csv
+metrics:
+  - some_metric
+  - some_other_metric
+columns:
+  some_col:
+      - metric_a
+      - metric_b
+  some_other_col:
+      - metric_b
+      - metric_c

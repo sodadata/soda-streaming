@@ -34,23 +34,23 @@ class ParserTest {
     @Test
     void parse_valid_warehouse_file() {
         assertDoesNotThrow(() -> Parser.parseWarehouseFile("warehouse_test.yml"));
-        Warehouse warehouse = null;
+        Datasource datasource = null;
         try {
-            warehouse = Parser.parseWarehouseFile("warehouse_test.yml");
+            datasource = Parser.parseWarehouseFile("warehouse_test.yml");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        assertNotNull(warehouse);
-        assertNotNull(warehouse.getName());
-        assertNotNull(warehouse.getConnection());
-        assertNotNull(warehouse.getConnection().getHost());
-        assertNotNull(warehouse.getConnection().getPort());
-        assertNotNull(warehouse.getConnection().getType());
+        assertNotNull(datasource);
+        assertNotNull(datasource.getName());
+        assertNotNull(datasource.getConnection());
+        assertNotNull(datasource.getConnection().getHost());
+        assertNotNull(datasource.getConnection().getPort());
+        assertNotNull(datasource.getConnection().getType());
 
-        assertEquals(warehouse.getName(),"test_warehouse");
-        assertEquals(warehouse.getConnection().getHost(),"localhost");
-        assertEquals(warehouse.getConnection().getPort(),"9992");
-        assertEquals(warehouse.getConnection().getType(), Connection.ConnectionType.KAFKA);
+        assertEquals(datasource.getName(),"test_warehouse");
+        assertEquals(datasource.getConnection().getHost(),"localhost");
+        assertEquals(datasource.getConnection().getPort(),"9992");
+        assertEquals(datasource.getConnection().getType(), Connection.ConnectionType.KAFKA);
 
     }
 
@@ -78,10 +78,35 @@ class ParserTest {
         assertNotNull(scan.getSchema_type());
         assertNotNull(scan.getSchema());
         assertNotNull(scan.getMetrics());
+        assertNull(scan.getColumns());
 
         assertEquals(scan.getStream_name(),"test");
         assertEquals(scan.getSchema_type(), Scan.SchemaType.AVRO);
         assertEquals(scan.getSchema(), Scan.RegistryType.INTERNAL_REGISTRY);
         assertEquals(scan.getMetrics(), Arrays.asList("some_metric","some_other_metric"));
+    }
+
+    @Test
+    void parse_valid_scan_with_column_metrics_file() {
+        assertDoesNotThrow(() -> Parser.parseScanFile("scan_columns_test.yml"));
+        Scan scan = null;
+        try {
+            scan = Parser.parseScanFile("scan_columns_test.yml");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        assertNotNull(scan);
+        assertNotNull(scan.getStream_name());
+        assertNotNull(scan.getSchema_type());
+        assertNotNull(scan.getSchema());
+        assertNotNull(scan.getMetrics());
+        assertNotNull(scan.getColumns());
+
+        assertEquals(scan.getStream_name(),"test");
+        assertEquals(scan.getSchema_type(), Scan.SchemaType.AVRO);
+        assertEquals(scan.getSchema(), Scan.RegistryType.INTERNAL_REGISTRY);
+        assertEquals(scan.getMetrics(), Arrays.asList("some_metric","some_other_metric"));
+        assertEquals(scan.getColumns().get("some_col"), Arrays.asList("metric_a","metric_b"));
+        assertEquals(scan.getColumns().get("some_other_col"), Arrays.asList("metric_b","metric_c"));
     }
 }

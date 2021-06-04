@@ -1,0 +1,11 @@
+stream_name: food
+schema: internal_registry # or external_registry or auto 
+schema_type: avro # or protobuf or json or csv
+metrics:
+  - message_count
+  - number_avg
+columns:
+  maxBudgetEuro:
+    - number_min
+    - number_avg
+    - number_max
