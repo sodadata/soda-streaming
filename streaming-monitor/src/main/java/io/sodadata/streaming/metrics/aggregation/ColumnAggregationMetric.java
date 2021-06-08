@@ -14,5 +14,4 @@ abstract public class ColumnAggregationMetric<IN, OUT, METRIC extends ColumnAggr
     public boolean accepts(Object in){
         return this.inputClazz.isInstance(in);
     }
-
 }

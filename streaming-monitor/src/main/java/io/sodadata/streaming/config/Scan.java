@@ -12,8 +12,7 @@
 
 package io.sodadata.streaming.config;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Scan {
     private String stream_name;
@@ -60,6 +59,36 @@ public class Scan {
 
     public void setColumns(Map<String,List<String>> columns) {
         this.columns = columns;
+    }
+
+    private Map<String,List<String>> getTransposedColumns(){
+        Map<String,List<String>> newMap = new HashMap<>();
+        for (Map.Entry<String,List<String>> columnMetrics:columns.entrySet()) {
+            String col = columnMetrics.getKey();
+            for (String metric: columnMetrics.getValue()){
+                newMap.putIfAbsent(metric, new ArrayList<>());
+                newMap.get(metric).add(col);
+            }
+        }
+        return newMap;
+    }
+
+    public List<MetricConfig> getMetricConfigs(){
+        List<MetricConfig> result = new ArrayList<>();
+        Map<String,List<String>> metricColumnsMap = getTransposedColumns();
+        Set<String> metricSet = new HashSet<String>();
+        metricSet.addAll(metrics);
+        metricSet.addAll(metricColumnsMap.keySet());
+        for(String metricName: metricSet) {
+            if (metricColumnsMap.containsKey(metricName) && !metrics.contains(metricName)){
+                Properties props = new Properties();
+                props.put("columns",metricColumnsMap.get(metricName));
+                result.add(new MetricConfig(metricName,props));
+            } else {
+                result.add(new MetricConfig(metricName));
+            }
+        }
+        return result;
     }
 
 

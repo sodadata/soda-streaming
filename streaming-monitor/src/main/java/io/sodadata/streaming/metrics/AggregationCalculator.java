@@ -1,5 +1,6 @@
 package io.sodadata.streaming.metrics;
 
+import io.sodadata.streaming.config.MetricConfig;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.flink.api.common.functions.AggregateFunction;
 import org.apache.flink.api.common.functions.RichAggregateFunction;
@@ -16,9 +17,9 @@ import java.util.stream.Collectors;
 
 public class AggregationCalculator implements AggregateFunction<GenericRecord, AggregationAccumulator, Map<String, BaseAggregationMetric<GenericRecord,?,?>>> {
 
-    private final List<String> metrics;
+    private final List<MetricConfig> metrics;
 
-    public AggregationCalculator(List<String> metrics) {
+    public AggregationCalculator(List<MetricConfig> metrics) {
         this.metrics = metrics;
     }
 
@@ -50,9 +51,9 @@ class AggregationAccumulator {
 
     private final AggregationMetricFactory factory = AggregationMetricFactory.getFactory();
 
-    AggregationAccumulator(List<String> metricNames) {
-        metrics = metricNames.stream()
-                .collect(Collectors.toMap(Function.identity(), factory::createMetric));
+    AggregationAccumulator(List<MetricConfig> metricConfigs) {
+        metrics = metricConfigs.stream()
+                .collect(Collectors.toMap(MetricConfig::getName, x -> factory.createMetric(x.getName(),x.getConfig())));
     }
     public void add(GenericRecord s){
         for (BaseAggregationMetric<GenericRecord,?,?> metric : metrics.values()){

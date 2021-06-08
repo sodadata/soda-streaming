@@ -47,6 +47,7 @@ public class StreamingJob {
 	public static void main(String[] args) throws Exception {
 		// read in the warehouse file
 		final String warehouse_config_path = (args.length > 0) ? args[0] : "datasource_cluster.yml";
+		final int window_seconds = (args.length > 1) ? Integer.parseInt(args[1]) : 10;
 		final Datasource datasource = Parser.parseWarehouseFile(warehouse_config_path);
 		System.out.printf("Read in datasource file: \n %s%n", datasource);
 		final List<Scan> scans = Parser.parseScanDirectory("scans");
@@ -72,8 +73,8 @@ public class StreamingJob {
 				consumer.setStartFromLatest();
 				DataStream<GenericRecord> stream = env.addSource(consumer);
 				DataStream<String> output = stream
-						.windowAll(TumblingProcessingTimeWindows.of(Time.seconds(10)))
-						.aggregate(new AggregationCalculator(scan.getMetrics()), new AggregationWindowOutput(topic));
+						.windowAll(TumblingProcessingTimeWindows.of(Time.seconds(window_seconds)))
+						.aggregate(new AggregationCalculator(scan.getMetricConfigs()), new AggregationWindowOutput(topic));
 				output.print();
 			} catch (IOException | SchemaParseException e) {
 				System.out.printf("ERROR: could not read/find schema file for %s%n",topic);

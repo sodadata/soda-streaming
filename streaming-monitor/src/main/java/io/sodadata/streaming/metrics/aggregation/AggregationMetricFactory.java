@@ -41,8 +41,16 @@ public class AggregationMetricFactory {
     public List<String> getRegisteredMetrics(){ return new ArrayList<>(metricMap.keySet());}
 
     public BaseAggregationMetric<GenericRecord, ?, ?> createMetric(String metric) {
+        return createMetric(metric, null);
+    }
+
+    public BaseAggregationMetric<GenericRecord, ?, ?> createMetric(String metric, Properties config) {
         if (metricMap.containsKey(metric)) {
-            return metricMap.get(metric).create();
+            if (config == null) {
+                return metricMap.get(metric).create();
+            } else {
+                return metricMap.get(metric).create(config);
+            }
         } else {
             throw new IllegalArgumentException(String.format("Count not find aggregation metric '%s' in registered metrics: %s", metric, this.getRegisteredMetrics()));
         }
