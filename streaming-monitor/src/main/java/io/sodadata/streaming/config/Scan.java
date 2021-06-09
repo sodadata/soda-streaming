@@ -14,6 +14,9 @@ package io.sodadata.streaming.config;
 
 import java.util.*;
 
+/*
+Class representing a Scan yaml config.
+ */
 public class Scan {
     private String stream_name;
     private RegistryType schema;

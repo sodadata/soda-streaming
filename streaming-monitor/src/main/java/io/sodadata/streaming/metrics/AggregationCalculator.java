@@ -15,6 +15,13 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Main Flink AggregateFunction that is used to calculate all metric outputs. <br>
+ * It can be instantiated with a list of metric (by name) that you want in the output. <br>
+ * It takes GenericRecord (avro specific) as input; <br>
+ * Holds an AggregationAccumulator as state; <br>
+ * Outputs a Map(String -> BaseAggregationMetric), keyed by metric name;
+ * */
 public class AggregationCalculator implements AggregateFunction<GenericRecord, AggregationAccumulator, Map<String, BaseAggregationMetric<GenericRecord,?,?>>> {
 
     private final List<MetricConfig> metrics;
@@ -41,11 +48,18 @@ public class AggregationCalculator implements AggregateFunction<GenericRecord, A
 
     @Override
     public AggregationAccumulator merge(AggregationAccumulator aggregationAccumulator, AggregationAccumulator acc1) {
+        //this has yet to be implemented, but it's not needed until we use parallelism
         //TODO: merge accumulators
         return null;
     }
 }
 
+/**
+ * Internal mutable state object for the AggregationCalculator.
+ * It internally holds a Map(String -> BaseAggregationMetric) and pushes each incoming record to all the BaseAggregationMetrics in the map.
+ * All these BaseAggregationMetrics are then updating their state accordingly.
+ * On output it will return this map.
+ * */
 class AggregationAccumulator {
     protected final Map<String, BaseAggregationMetric<GenericRecord,?,?>> metrics;
 

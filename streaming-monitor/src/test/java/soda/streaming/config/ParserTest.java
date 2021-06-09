@@ -23,20 +23,20 @@ class ParserTest {
 
     @Test
     void parse_existing_warehouse_file() {
-        assertDoesNotThrow(() -> Parser.parseWarehouseFile("warehouse_test.yml"));
+        assertDoesNotThrow(() -> Parser.parseDatasourceFile("warehouse_test.yml"));
     }
 
     @Test
     void parse_non_existing_warehouse_file_should_throw() {
-        assertThrows(FileNotFoundException.class, () -> Parser.parseWarehouseFile("non-existing.yml"));
+        assertThrows(FileNotFoundException.class, () -> Parser.parseDatasourceFile("non-existing.yml"));
     }
 
     @Test
     void parse_valid_warehouse_file() {
-        assertDoesNotThrow(() -> Parser.parseWarehouseFile("warehouse_test.yml"));
+        assertDoesNotThrow(() -> Parser.parseDatasourceFile("warehouse_test.yml"));
         Datasource datasource = null;
         try {
-            datasource = Parser.parseWarehouseFile("warehouse_test.yml");
+            datasource = Parser.parseDatasourceFile("warehouse_test.yml");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

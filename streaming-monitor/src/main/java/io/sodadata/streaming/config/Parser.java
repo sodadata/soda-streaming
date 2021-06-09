@@ -24,8 +24,12 @@ import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.util.*;
 
+/*
+This class contains all the logic to parse the scan yaml config files and the datasource yaml config file.
+It parses them to their respective classes.
+*/
 public class Parser {
-    public static Datasource parseWarehouseFile(String path) throws FileNotFoundException {
+    public static Datasource parseDatasourceFile(String path) throws FileNotFoundException {
         LoaderOptions loaderOpts = new LoaderOptions();
         loaderOpts.setEnumCaseSensitive(false);
         Constructor c = new Constructor(Datasource.class, loaderOpts);

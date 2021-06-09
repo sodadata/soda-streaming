@@ -7,11 +7,20 @@ import io.sodadata.streaming.formats.avro.AvroTypeConverter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//TODO: a lot of this logic is avro specific, in later iterations this should be abstracted out
+/**
+ * The class is a BaseAggregationMetric that can be wrapped around a ColumnAggregationMetric subclass to apply that column metric to all applicable columns.
+ * Where 1 ColumnAggregationMetric is used to hold the metric state respective to 1 column,
+ * this class will hold a ColumnAggregationMetric instance for each of the columns it is applicable to.
+ *
+ * It will take a GenericRecord as input, extract the values of the columns conforming to the BASE_IN type,
+ * and then send these values to the respective ColumnAggregationMetric of that column. <br>
+ * This functionality is implemented in the add(input) method and uses the accepts(input) and add(input) methods of the ColumnAggregationMetric.
+* */
 public class ColumnAggregationMetricAggregator<BASE_IN, BASE_OUT ,
             BASE_METRIC extends ColumnAggregationMetric<BASE_IN,BASE_OUT,BASE_METRIC>>
         extends BaseAggregationMetric<GenericRecord, Map<String,BASE_OUT>, ColumnAggregationMetricAggregator<BASE_IN, BASE_OUT,BASE_METRIC>>
 {
+    //TODO: a lot of this logic is avro specific, in later iterations this should be abstracted out
 
     private final BASE_METRIC metricReference;
     private final List<String> columns;

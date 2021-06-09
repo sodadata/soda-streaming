@@ -31,50 +31,47 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Skeleton for a Flink Streaming Job.
- *
- * <p>For a tutorial how to write a Flink streaming application, check the
- * tutorials and examples on the <a href="https://flink.apache.org/docs/stable/">Flink Website</a>.
- *
- * <p>To package your application into a JAR file for execution, run
- * 'mvn clean package' on the command line.
- *
- * <p>If you change the name of the main class (with the public static void main(String[] args))
- * method, change the respective entry in the POM.xml file (simply search for 'mainClass').
+ * The main stream monitoring job.
  */
 public class StreamingJob {
 
 	public static void main(String[] args) throws Exception {
-		// read in the warehouse file
-		final String warehouse_config_path = (args.length > 0) ? args[0] : "datasource_cluster.yml";
+		// read in the datasource file, the file path can be passed as program arg.
+		final String datasource_config_path = (args.length > 0) ? args[0] : "datasource_cluster.yml";
 		final int window_seconds = (args.length > 1) ? Integer.parseInt(args[1]) : 10;
-		final Datasource datasource = Parser.parseWarehouseFile(warehouse_config_path);
+		final Datasource datasource = Parser.parseDatasourceFile(datasource_config_path);
 		System.out.printf("Read in datasource file: \n %s%n", datasource);
 		final List<Scan> scans = Parser.parseScanDirectory("scans");
 		System.out.println("Read in scan files:");
 		scans.forEach(System.out::println);
 
-
 		// set up the streaming execution environment
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
+		// set up the kafka connection properties
 		Properties properties = new Properties();
 		properties.setProperty("bootstrap.servers", datasource.getConnection().getURL());
 		properties.setProperty("group.id", "data-monitor");
 
 
-
 		scans.forEach(scan -> {
 			String topic = scan.getStream_name();
 			try {
+				// 1. parse the schema, for each topic we expect a <topic>.avsc file to be present in the schema-registry dir.
 				Schema schema = new Schema.Parser()
 						.parse(StreamingJob.class.getClassLoader().getResourceAsStream(String.format("schema-registry/%s.avsc",topic )));
+
+				// 2. set up the flink source for the topic
 				FlinkKafkaConsumer<GenericRecord> consumer = new FlinkKafkaConsumer<>(topic, AvroDeserializationSchema.forGeneric(schema), properties);
 				consumer.setStartFromLatest();
 				DataStream<GenericRecord> stream = env.addSource(consumer);
+
+				// 3. add the metric calculation pipeline to the source
 				DataStream<String> output = stream
 						.windowAll(TumblingProcessingTimeWindows.of(Time.seconds(window_seconds)))
 						.aggregate(new AggregationCalculator(scan.getMetricConfigs()), new AggregationWindowOutput(topic));
+
+				// 4. print the output
 				output.print();
 			} catch (IOException | SchemaParseException e) {
 				System.out.printf("ERROR: could not read/find schema file for %s%n",topic);
@@ -83,7 +80,7 @@ public class StreamingJob {
 			}
 		});
 
-		// execute program
+		// Start the full flink job
 		env.execute("data-monitor");
 	}
 }
