@@ -12,6 +12,10 @@
 
 package io.sodadata.streaming.config;
 
+/*
+This class contains the connection information for the datasource to use.
+Currently only connections to a non secure kafka cluster are supported.
+*/
 public class Connection {
     private ConnectionType type;
     private String host;

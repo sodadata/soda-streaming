@@ -23,6 +23,10 @@ import io.sodadata.streaming.metrics.aggregation.BaseAggregationMetric;
 import java.util.Date;
 import java.util.Map;
 
+/**
+* This class is used to provide a more rich window output.
+* It enhances the metric output from AggregationCalculator with start and end time information of the current tumbling window.
+* */
 public class AggregationWindowOutput extends ProcessAllWindowFunction<Map<String, BaseAggregationMetric<GenericRecord,?,?>>,String, TimeWindow> {
     final String topic;
 
@@ -31,6 +35,7 @@ public class AggregationWindowOutput extends ProcessAllWindowFunction<Map<String
     }
 
     @Override
+    //takes the output from the AggregationCalculator and enriches it with Context information
     public void process(Context context, Iterable<Map<String, BaseAggregationMetric<GenericRecord, ?, ?>>> iterable, Collector<String> collector) throws Exception {
         Map<String, BaseAggregationMetric<GenericRecord, ?, ?>> metrics = iterable.iterator().next();
         Date timestamp = new Date(context.window().getEnd());

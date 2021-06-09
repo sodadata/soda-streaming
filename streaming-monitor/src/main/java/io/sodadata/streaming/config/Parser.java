@@ -18,6 +18,10 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.*;
 
+/*
+This class contains all the logic to parse the scan yaml config files and the datasource yaml config file.
+It parses them to their respective classes.
+*/
 public class Parser {
     public static Warehouse parseWarehouseFile(String path) throws FileNotFoundException {
         LoaderOptions loaderOpts = new LoaderOptions();

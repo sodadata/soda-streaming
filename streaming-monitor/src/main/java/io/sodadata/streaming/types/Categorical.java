@@ -12,7 +12,9 @@
 
 package io.sodadata.streaming.types;
 
-//Class to wrap any categorical values in
+/**
+ * Class to wrap any categorical values in, internal value needs to be representable as a string
+ */
 public class Categorical {
 
     final String value;
