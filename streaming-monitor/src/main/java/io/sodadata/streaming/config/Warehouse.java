@@ -12,6 +12,9 @@
 
 package io.sodadata.streaming.config;
 
+/*
+Class representing a Datasource yaml config
+*/
 public class Warehouse {
 
     private String name;
