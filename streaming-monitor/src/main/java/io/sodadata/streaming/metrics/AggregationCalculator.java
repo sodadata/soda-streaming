@@ -47,10 +47,16 @@ public class AggregationCalculator implements AggregateFunction<GenericRecord, A
     }
 
     @Override
-    public AggregationAccumulator merge(AggregationAccumulator aggregationAccumulator, AggregationAccumulator acc1) {
+    public AggregationAccumulator merge(AggregationAccumulator acc0, AggregationAccumulator acc1) {
         //this has yet to be implemented, but it's not needed until we use parallelism
-        //TODO: merge accumulators
-        return null;
+        AggregationAccumulator acc = new AggregationAccumulator(this.metrics);
+        for (String metric: acc.metrics.keySet()){
+            //TODO: Find solution to do this with the types.
+//            var base = (BaseAggregationMetric<GenericRecord,?,BaseAggregationMetric<GenericRecord,?,BaseAggregationMetric<GenericRecord,?,?>>>) acc.metrics.get(metric);
+//            base.merge(acc0.metrics.get(metric));
+//            base.merge(acc1.metrics.get(metric));
+        }
+        return acc0;
     }
 }
 

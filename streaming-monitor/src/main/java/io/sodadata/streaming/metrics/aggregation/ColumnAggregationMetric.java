@@ -16,6 +16,10 @@ import org.apache.avro.Schema;
 abstract public class ColumnAggregationMetric<IN, OUT, METRIC extends ColumnAggregationMetric<IN, OUT, METRIC>>
         extends BaseAggregationMetric<IN,OUT,METRIC>{
 
+    //TODO: currently this is also a BaseAggregationMetric, but this does not make much sense:
+    // Because it does not take a whole record as input type. It currently extends the base metric to inherit the metric interface methods.
+    // It should be better to split these off in a seperate interface instead of a superclass.
+
     private final Class<IN> inputClazz;
 
     protected ColumnAggregationMetric(String name,Class<IN> inputClazz) {
