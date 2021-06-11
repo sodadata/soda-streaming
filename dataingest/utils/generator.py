@@ -26,6 +26,25 @@ def generate_random_record(customer: str):
         raise NotSupportedCustomer(f"No customer implementation found for {customer}")
 
 
+def generate_partially_invalid_record(customer: str):
+    if customer == "expedia":
+        return {"checkInDateYear": random.randint(2000, 2100),
+         "checkInDateMonth": random.randint(1, 12),
+         "checkInDateDay": random.randint(1, 28),
+         "destinationRegionId": nullable(str(random.randint(50000, 700000))),
+         "destinationRegionName": get_random_destinationregionname(),
+         "maxBudgetEuro": nullable(random.randint(-10000, 10000)/10),
+         "propertyTypes": choose_specific_propertytype()}
+    elif customer == "hellofresh":
+        return {"numberOfPeople": random.randint(1, 6),
+         "numberOfMeals": random.randint(-5, 5),
+         "foodAllergiesDescription": nullable(get_random_string(random.randint(10, 200))),
+         "boxPrice": nullable(random.randint(-40, 100)/10),
+         "menuPreferenceTypes": choose_specific_menupreference()}
+    else:
+        raise NotSupportedCustomer(f"No customer implementation found for {customer}")
+
+
 def nullable(fct):
     if random.randint(0, 2) == 2:
         return fct

@@ -1,7 +1,16 @@
 avro==1.10.2
 certifi==2020.12.5
 chardet==4.0.0
+click==8.0.1
 confluent-kafka==1.7.0
+Flask==2.0.1
 idna==2.10
+importlib-metadata==4.4.0
+itsdangerous==2.0.1
+Jinja2==3.0.1
+MarkupSafe==2.0.1
 requests==2.25.1
+typing-extensions==3.10.0.0
 urllib3==1.26.4
+Werkzeug==2.0.1
+zipp==3.4.1
