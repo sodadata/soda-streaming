@@ -27,7 +27,7 @@ def generate_random_record(customer: str):
 
 
 def generate_partially_invalid_record(customer: str):
-    if customer == "expedia":
+    if customer == "travel":
         return {"checkInDateYear": random.randint(2000, 2100),
          "checkInDateMonth": random.randint(1, 12),
          "checkInDateDay": random.randint(1, 28),
@@ -35,7 +35,7 @@ def generate_partially_invalid_record(customer: str):
          "destinationRegionName": get_random_destinationregionname(),
          "maxBudgetEuro": nullable(random.randint(-10000, 10000)/10),
          "propertyTypes": choose_specific_propertytype()}
-    elif customer == "hellofresh":
+    elif customer == "food":
         return {"numberOfPeople": random.randint(1, 6),
          "numberOfMeals": random.randint(-5, 5),
          "foodAllergiesDescription": nullable(get_random_string(random.randint(10, 200))),

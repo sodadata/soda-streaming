@@ -66,11 +66,13 @@ public class Scan {
 
     private Map<String,List<String>> getTransposedColumns(){
         Map<String,List<String>> newMap = new HashMap<>();
-        for (Map.Entry<String,List<String>> columnMetrics:columns.entrySet()) {
-            String col = columnMetrics.getKey();
-            for (String metric: columnMetrics.getValue()){
-                newMap.putIfAbsent(metric, new ArrayList<>());
-                newMap.get(metric).add(col);
+        if (this.columns != null){
+            for (Map.Entry<String,List<String>> columnMetrics:columns.entrySet()) {
+                String col = columnMetrics.getKey();
+                for (String metric: columnMetrics.getValue()){
+                    newMap.putIfAbsent(metric, new ArrayList<>());
+                    newMap.get(metric).add(col);
+                }
             }
         }
         return newMap;

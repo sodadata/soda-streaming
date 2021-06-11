@@ -10,7 +10,7 @@ inspect_flink_taskmanager() {
 }
 
 send_trigger_for_partially_invalid_data() {
- curl --header "Content-Type: application/json" --request POST --data '{"action_request": "partially_invalid", "topic_description": "expedia"}' http://data-generator:5000/api/v0.1/actions
+ curl --header "Content-Type: application/json" --request POST --data '{"action_request": "partially_invalid", "topic_description": "travel"}' http://localhost:5000/api/v0.1/actions
 }
 
 update_jar_with_specific_new_scan_file() {
@@ -19,11 +19,12 @@ update_jar_with_specific_new_scan_file() {
   cp -r specific-scans/* tmp-e2edemo/scans
   cd tmp-e2edemo
   jar uf streaming-monitor.jar ./scans
+  cd ..
 }
 
 stop_flink_job() {
-  jobid=$(curl jobmanager:8081/v1/jobs | jq '.jobs[].id'| cut -d '"' -f 2)
-  curl -X PATCH jobmanager:8081/v1/jobs/$jobid
+  jobid=$(curl localhost:8081/v1/jobs | jq '.jobs[].id'| cut -d '"' -f 2)
+  curl -X PATCH localhost:8081/v1/jobs/$jobid
 }
 
 remove_temp_files_folders() {
@@ -82,7 +83,7 @@ echo "10. Inspecting logs of the flink job"
 echo "..."
 sleep 7
 inspect_flink_taskmanager
-echo ""
+echo "..."
 echo "===="
 echo "11. Shutting the test environment down"
 echo "..."
