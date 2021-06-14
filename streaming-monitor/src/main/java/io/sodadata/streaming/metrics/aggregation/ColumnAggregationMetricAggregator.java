@@ -2,11 +2,9 @@ package io.sodadata.streaming.metrics.aggregation;
 
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.util.Utf8;
 import io.sodadata.streaming.formats.avro.AvroTypeConverter;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -25,6 +23,7 @@ public class ColumnAggregationMetricAggregator<BASE_IN, BASE_OUT ,
     //TODO: a lot of this logic is avro specific, in later iterations this should be abstracted out
 
     private final BASE_METRIC metricReference;
+    private final List<String> columns;
 
 
     private final Map<String,BASE_METRIC> accumulatorMap = new HashMap<>();
@@ -32,6 +31,13 @@ public class ColumnAggregationMetricAggregator<BASE_IN, BASE_OUT ,
     public ColumnAggregationMetricAggregator(BASE_METRIC metric) {
         super(metric.name);
         metricReference = metric;
+        this.columns = null;
+    }
+
+    public ColumnAggregationMetricAggregator(BASE_METRIC metric, List<String> columns) {
+        super(metric.name);
+        metricReference = metric;
+        this.columns = columns;
     }
 
     @Override
@@ -39,17 +45,19 @@ public class ColumnAggregationMetricAggregator<BASE_IN, BASE_OUT ,
         Schema schema = input.getSchema();
         for (Schema.Field field: schema.getFields()){
             String fieldName = field.name();
-            Object fieldValue = AvroTypeConverter.convert(input.get(fieldName));
-            if (metricReference.accepts(fieldValue)){
-                if (!accumulatorMap.containsKey(fieldName)){
-                    accumulatorMap.put(fieldName,metricReference.create());
-                }
-                try {
-                    accumulatorMap.get(fieldName).add((BASE_IN) fieldValue);
-                } catch (ClassCastException e) {
-                    System.out.println("ERROR: could not cast avro type to expected type");
-                    System.out.println("Value: "+input.get(fieldName).toString());
-                    System.out.println(e);
+            if (this.columns == null || this.columns.contains(fieldName)){
+                Object fieldValue = AvroTypeConverter.convert(input.get(fieldName));
+                if (metricReference.accepts(fieldValue)){
+                    if (!accumulatorMap.containsKey(fieldName)){
+                        accumulatorMap.put(fieldName,metricReference.create());
+                    }
+                    try {
+                        accumulatorMap.get(fieldName).add((BASE_IN) fieldValue);
+                    } catch (ClassCastException e) {
+                        System.out.println("ERROR: could not cast avro type to expected type");
+                        System.out.println("Value: "+input.get(fieldName).toString());
+                        System.out.println(e);
+                    }
                 }
             }
         }
@@ -78,6 +86,11 @@ public class ColumnAggregationMetricAggregator<BASE_IN, BASE_OUT ,
     @Override
     protected ColumnAggregationMetricAggregator<BASE_IN, BASE_OUT, BASE_METRIC> create() {
         return new ColumnAggregationMetricAggregator<>(this.metricReference);
+    }
+
+    protected ColumnAggregationMetricAggregator<BASE_IN, BASE_OUT, BASE_METRIC> create(Properties config) {
+        List<String> cols = (List<String>) config.getOrDefault("columns",null);
+        return new ColumnAggregationMetricAggregator<>(this.metricReference, cols);
     }
 
 }

@@ -19,7 +19,7 @@ public class StringLengthMax extends ColumnAggregationMetric<CharSequence, Integ
     private Integer lengthMax = 0;
 
     public StringLengthMax() {
-        super("string-length-max",CharSequence.class);
+        super("string_length_max",CharSequence.class);
     }
 
     @Override

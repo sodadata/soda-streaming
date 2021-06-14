@@ -24,7 +24,7 @@ public class CategoricalFrequency extends ColumnAggregationMetric<Categorical, M
     private final Map<String, Integer> counts = new HashMap<>();
 
     public CategoricalFrequency() {
-        super("categorical-frequency", Categorical.class);
+        super("categorical_frequency", Categorical.class);
     }
 
     @Override

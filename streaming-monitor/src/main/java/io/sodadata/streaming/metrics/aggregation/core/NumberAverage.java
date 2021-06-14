@@ -21,7 +21,7 @@ public class NumberAverage extends ColumnAggregationMetric<Number, Double, Numbe
 
 
     public NumberAverage() {
-        super("number-avg", Number.class);
+        super("number_avg", Number.class);
     }
 
     @Override

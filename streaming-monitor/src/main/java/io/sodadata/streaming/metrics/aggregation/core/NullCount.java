@@ -19,7 +19,7 @@ public class NullCount extends ColumnAggregationMetric<Object, Integer, NullCoun
     private Integer count = 0 ;
 
     public NullCount() {
-        super("null-count", Object.class);
+        super("null_count", Object.class);
     }
 
     @Override

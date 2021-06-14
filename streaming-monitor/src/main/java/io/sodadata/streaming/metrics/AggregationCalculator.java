@@ -1,5 +1,6 @@
 package io.sodadata.streaming.metrics;
 
+import io.sodadata.streaming.config.MetricConfig;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.flink.api.common.functions.AggregateFunction;
 import org.apache.flink.api.common.functions.RichAggregateFunction;
@@ -23,9 +24,9 @@ import java.util.stream.Collectors;
  * */
 public class AggregationCalculator implements AggregateFunction<GenericRecord, AggregationAccumulator, Map<String, BaseAggregationMetric<GenericRecord,?,?>>> {
 
-    private final List<String> metrics;
+    private final List<MetricConfig> metrics;
 
-    public AggregationCalculator(List<String> metrics) {
+    public AggregationCalculator(List<MetricConfig> metrics) {
         this.metrics = metrics;
     }
 
@@ -46,10 +47,16 @@ public class AggregationCalculator implements AggregateFunction<GenericRecord, A
     }
 
     @Override
-    public AggregationAccumulator merge(AggregationAccumulator aggregationAccumulator, AggregationAccumulator acc1) {
+    public AggregationAccumulator merge(AggregationAccumulator acc0, AggregationAccumulator acc1) {
         //this has yet to be implemented, but it's not needed until we use parallelism
-        //TODO: merge accumulators
-        return null;
+        AggregationAccumulator acc = new AggregationAccumulator(this.metrics);
+        for (String metric: acc.metrics.keySet()){
+            //TODO: Find solution to do this with the types.
+//            var base = (BaseAggregationMetric<GenericRecord,?,BaseAggregationMetric<GenericRecord,?,BaseAggregationMetric<GenericRecord,?,?>>>) acc.metrics.get(metric);
+//            base.merge(acc0.metrics.get(metric));
+//            base.merge(acc1.metrics.get(metric));
+        }
+        return acc0;
     }
 }
 
@@ -64,9 +71,9 @@ class AggregationAccumulator {
 
     private final AggregationMetricFactory factory = AggregationMetricFactory.getFactory();
 
-    AggregationAccumulator(List<String> metricNames) {
-        metrics = metricNames.stream()
-                .collect(Collectors.toMap(Function.identity(), factory::createMetric));
+    AggregationAccumulator(List<MetricConfig> metricConfigs) {
+        metrics = metricConfigs.stream()
+                .collect(Collectors.toMap(MetricConfig::getName, x -> factory.createMetric(x.getName(),x.getConfig())));
     }
     public void add(GenericRecord s){
         for (BaseAggregationMetric<GenericRecord,?,?> metric : metrics.values()){

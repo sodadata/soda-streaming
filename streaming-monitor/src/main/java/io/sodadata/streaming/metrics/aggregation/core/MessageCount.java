@@ -20,7 +20,7 @@ public class MessageCount extends BaseAggregationMetric<GenericRecord, Integer, 
     private Integer accumulator = 0;
 
     public MessageCount() {
-        super("message-count");
+        super("message_count");
     }
 
     @Override

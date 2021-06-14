@@ -60,6 +60,8 @@ services:
   data-generator:
     image: data-generator
     container_name: data-generator
+    ports:
+      - "5000:5000"
     build:
       context: ../dataingest
       dockerfile: Dockerfile

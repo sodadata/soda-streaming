@@ -12,7 +12,7 @@
 
 package io.sodadata.streaming.config;
 
-import java.util.List;
+import java.util.*;
 
 /*
 Class representing a Scan yaml config.
@@ -22,6 +22,7 @@ public class Scan {
     private RegistryType schema;
     private SchemaType schema_type;
     private List<String> metrics;
+    private Map<String,List<String>> columns;
 
     public String getStream_name() {
         return stream_name;
@@ -55,6 +56,46 @@ public class Scan {
         this.metrics = metrics;
     }
 
+    public Map<String,List<String>> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(Map<String,List<String>> columns) {
+        this.columns = columns;
+    }
+
+    private Map<String,List<String>> getTransposedColumns(){
+        Map<String,List<String>> newMap = new HashMap<>();
+        if (this.columns != null){
+            for (Map.Entry<String,List<String>> columnMetrics:columns.entrySet()) {
+                String col = columnMetrics.getKey();
+                for (String metric: columnMetrics.getValue()){
+                    newMap.putIfAbsent(metric, new ArrayList<>());
+                    newMap.get(metric).add(col);
+                }
+            }
+        }
+        return newMap;
+    }
+
+    public List<MetricConfig> getMetricConfigs(){
+        List<MetricConfig> result = new ArrayList<>();
+        Map<String,List<String>> metricColumnsMap = getTransposedColumns();
+        Set<String> metricSet = new HashSet<String>();
+        metricSet.addAll(metrics);
+        metricSet.addAll(metricColumnsMap.keySet());
+        for(String metricName: metricSet) {
+            if (metricColumnsMap.containsKey(metricName) && !metrics.contains(metricName)){
+                Properties props = new Properties();
+                props.put("columns",metricColumnsMap.get(metricName));
+                result.add(new MetricConfig(metricName,props));
+            } else {
+                result.add(new MetricConfig(metricName));
+            }
+        }
+        return result;
+    }
+
 
     // Only INTERNAL_REGISTRY is supported for now
     public enum RegistryType{
@@ -69,5 +110,16 @@ public class Scan {
         AVRO,
 //        JSON,
 //        PROTOBUF
+    }
+
+    @Override
+    public String toString() {
+        return "Scan{" +
+                "stream_name='" + stream_name + '\'' +
+                ", schema=" + schema +
+                ", schema_type=" + schema_type +
+                ", metrics=" + metrics +
+                ", columns=" + columns +
+                '}';
     }
 }

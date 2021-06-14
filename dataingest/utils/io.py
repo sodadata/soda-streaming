@@ -6,8 +6,9 @@ from typing import Dict
 import threading
 from confluent_kafka import Producer
 import logging
-from utils.generator import generate_random_record
+from utils.generator import generate_random_record, generate_partially_invalid_record
 import time
+from queue import Queue
 
 logger = logging.getLogger(__name__)
 
@@ -47,13 +48,16 @@ class CustomAvroKafkaPublisher(threading.Thread):
     """
     def __init__(self,
                  kafka_config: Dict[str, str],
-                 data_generation_rate_msg_sec: float):
+                 data_generation_rate_msg_sec: float,
+                 queue: Queue):
         threading.Thread.__init__(self, name=f"thread-{kafka_config['topic_description']}")
         self.bootstrap_server = kafka_config["bootstrap_server"]
         self.topic_name = kafka_config["topic_name"]
         self.topic_description = kafka_config["topic_description"]
         self.data_generation_rate_msg_sec = data_generation_rate_msg_sec
         self.schema = read_schema(f"./schemas/{self.topic_description}.avsc")
+        self.config_queue = queue
+        self.status_random_generator = "valid"
 
     def run(self):
         p = Producer({'bootstrap.servers': self.bootstrap_server})
@@ -61,20 +65,31 @@ class CustomAvroKafkaPublisher(threading.Thread):
         counter_messages_published = 0
         while True:
             for i in range(10):
-                random_data = generate_random_record(self.topic_description)
+                if self.status_random_generator == "valid":
+                    random_data = generate_random_record(self.topic_description)
+                else: # received partially-invalid
+                    random_data = generate_partially_invalid_record(self.topic_description)
                 avro_serialized_data = get_kafka_ready_avro_record(self.schema, random_data)
                 p.produce(self.topic_name, avro_serialized_data, callback=delivery_report)
                 counter_messages_published +=1
                 logger.debug(f"Published to {self.topic_name} | totalling to {counter_messages_published} messages")
                 time.sleep(1/self.data_generation_rate_msg_sec)
             if counter_messages_published % 100 == 0:
+                action = get_config_from_queue(self.config_queue)
+                if action is not None:
+                    self.status_random_generator = action
                 logger.info(f"Published to {self.topic_name} |Content: {random_data}| totalling to {counter_messages_published} messages")
             p.flush()
 
 
-
-
-
+def get_config_from_queue(queue: Queue):
+    if not queue.empty():
+        config_instruction = queue.get()
+        logger.debug(f"Received instruction: {config_instruction}")
+        return config_instruction
+    else:
+        logger.debug("no config message received")
+        pass
 
 
 def delivery_report(err, msg):
